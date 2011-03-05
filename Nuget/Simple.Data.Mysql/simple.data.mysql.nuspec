@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<package> 
+  <metadata> 
+    <id>Simple.Data.Mysql</id> 
+    <version>0.5.1</version> 
+    <authors>Vidar Løvbrekke Sømme</authors> 
+    <owners>Vidar Løvbrekke Sømme</owners>
+    <description>MySql ADO provider for the Simple.Data library</description> 
+    <projectUrl>http://github.com/Vidarls/Simple.Data.Mysql</projectUrl>
+    <licenseUrl>http://www.opensource.org/licenses/gpl-2.0</licenseUrl>
+    <tags>sql database data ado .net40 mysql</tags>
+    <language>en-US</language> 
+    <dependencies>
+      <dependency id="Simple.Data.Core" version="[0.5.1]" />
+    </dependencies>
+ </metadata> 
+</package>
