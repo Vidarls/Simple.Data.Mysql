@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.Composition;
+using System.Data;
 using System.Data.Common;
 using MySql.Data.MySqlClient;
 using Simple.Data.Ado;
@@ -17,7 +18,7 @@ namespace Simple.Data.Mysql.Mysql40
             _connectionString = connectionString;
         }
 
-        public DbConnection CreateConnection()
+        public IDbConnection CreateConnection()
         {
             return new MySqlConnection(_connectionString);
         }
