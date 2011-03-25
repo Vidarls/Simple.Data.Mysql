@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel.Composition;
 using System.Data;
-using System.Data.Common;
 using MySql.Data.MySqlClient;
 using Simple.Data.Ado;
 using Simple.Data.Ado.Schema;
@@ -9,6 +8,7 @@ using Simple.Data.Ado.Schema;
 namespace Simple.Data.Mysql.Mysql40
 {
     [Export("sql", typeof(IConnectionProvider))]
+    [Export("MySql.Data.MySqlClient", typeof(IConnectionProvider))]
     public class Mysql40ConnectionProvider : IConnectionProvider
     {
         private string _connectionString;
