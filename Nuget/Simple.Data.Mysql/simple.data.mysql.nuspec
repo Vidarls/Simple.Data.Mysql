@@ -2,17 +2,19 @@
 <package> 
   <metadata> 
     <id>Simple.Data.Mysql</id> 
-    <version>0.5.5</version> 
+    <version>0.5.6</version> 
     <authors>Vidar Løvbrekke Sømme</authors> 
     <owners>Vidar Løvbrekke Sømme</owners>
     <description>MySql ADO provider for the Simple.Data library</description> 
+	<summary>ySql ADO provider for the Simple.Data library Based on the Mysql .net connector v 5.1.7. Tested against Mysql 4.0 and Mysql 5.5</summary>
     <projectUrl>http://github.com/Vidarls/Simple.Data.Mysql</projectUrl>
-    <licenseUrl>http://www.opensource.org/licenses/gpl-2.0</licenseUrl>
+    <licenseUrl>http://www.opensource.org/licenses/mit-license.php</licenseUrl>
 	<iconUrl>http://simplefx.org/images/simpledata100x100.png</iconUrl>
     <tags>sql database data ado .net40 mysql</tags>
     <language>en-US</language> 
     <dependencies>
-      <dependency id="Simple.Data.Ado" version="[0.5.5]" />
+      <dependency id="Simple.Data.Ado" version="0.5.6" />
+	  <dependency id="Mysql.Data" version="[5.1.7.0]" />
     </dependencies>
  </metadata> 
 </package>
