@@ -44,7 +44,7 @@ namespace Simple.Data.Mysql.Mysql40
 
         public IEnumerable<Column> GetColumns(Table table)
         {
-            return Enumerable.Select(GetColumnsDataTable(table).AsEnumerable(), row => new Column(row["Field"].ToString(), table, row["Extra"].ToString().ToUpper().Contains("AUTO_INCREMENT")));
+            return GetColumnInfo(table).Select(c => new Column(c.Name, table, c.IsAutoincrement, c.DbType, c.Capacity));
         }
 
         public IEnumerable<Procedure> GetStoredProcedures()
@@ -70,9 +70,8 @@ namespace Simple.Data.Mysql.Mysql40
         {
             //Implicit foreign key support
             //MyIsam (the most used Mysql db engine) does not support foreign key constraint
-            //Foreign key support is therefor implemented in an implicit way
-            //based on naming conventions
-            //If a column name exisits as a primarykey in one table, then a column with the same name can
+            //Foreign key support is therefor implemented in an implicit way based on naming conventions
+            //If a column name exists as a primarykey in one table, then a column with the same name can
             //be used as a foreign key in another table.
             var foreignKeys = new List<ForeignKey>();
             var tables = GetTables();
@@ -104,14 +103,15 @@ namespace Simple.Data.Mysql.Mysql40
             return (baseName.StartsWith("?")) ? baseName : "?" + baseName;
         }
 
-        public Type DataTypeToClrType(string dataType)
-        {
-            return SqlTypeResolver.GetClrType(dataType);
-        }
-
         private DataTable GetColumnsDataTable(Table table)
         {
-            return SelectToDataTable(string.Format("SHOW COLUMNS FROM {0}",table.ActualName));
+            return SelectToDataTable(string.Format("SHOW COLUMNS FROM {0}", table.ActualName));
+        }
+
+        private IEnumerable<MysqlColumnInfo> GetColumnInfo(Table table)
+        {
+            return GetColumnsDataTable(table).AsEnumerable().Select(row =>
+                MysqlColumnInfoCreator.CreateColumnInfo(row["field"].ToString(),row["extra"].ToString(), row["type"].ToString()));
         }
 
         private DataTable SelectToDataTable(string sql)

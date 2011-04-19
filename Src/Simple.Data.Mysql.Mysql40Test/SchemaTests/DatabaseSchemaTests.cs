@@ -1,7 +1,7 @@
-﻿using System.Linq;
+﻿using System.Data;
+using System.Linq;
 using NUnit.Framework;
 using Simple.Data.TestHelper;
-using Simple.Data;
 
 namespace Simple.Data.Mysql.Mysql40Test.SchemaTests
 {
@@ -30,6 +30,14 @@ namespace Simple.Data.Mysql.Mysql40Test.SchemaTests
         {
             var table = Schema.FindTable("Users");
             Assert.AreEqual(1, table.Columns.Count(c => c.ActualName == "Id"));
+        }
+
+        [Test]
+        public void TestColumnTypeInfo()
+        {
+            var column = Schema.FindTable("Users").Columns.Where(c => c.ActualName == "Id").First();
+            Assert.AreEqual(DbType.Int32, column.DbType, "DbType not correct");
+            Assert.AreNotEqual(0, column.MaxLength, "Capacity not recorded");
         }
 
         [Test]

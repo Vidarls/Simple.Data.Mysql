@@ -24,7 +24,7 @@ namespace Simple.Data.Mysql.Mysql40Test
         [Test]
         public void TestProviderWithConnectionString()
         {
-            var provider = ProviderHelper.GetProviderByConnectionString(ConnectionString);
+            var provider = new ProviderHelper().GetProviderByConnectionString(ConnectionString);
             Assert.IsInstanceOf(typeof(Mysql40ConnectionProvider), provider);
         }
 
