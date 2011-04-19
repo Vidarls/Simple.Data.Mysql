@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 #Simple.Data.Mysql
 Simple.Data.Mysql is an ADO provider for the Simple.Data framework by Mark Rendle.
 
@@ -16,7 +15,7 @@ This will get all dependent libraries in addition to the Simple.Data.Mysql provi
 One of the key features of Simple.Data is the support for implicit foreign key queries. 
 Thus you can do:
 
-db.Customers.Find(db.Customers.Invoices.Paid == “N”)
+db.Customers.Find(db.Customers.Invoices.Paid == "N")
 
 And the resulting SQL will be:
 
@@ -81,4 +80,3 @@ At this point this is the only way to do implicit joins with the Mysql Provider,
 ##Resources
 * The Simple.Data project on [Github](http://github.com/markrendle/Simple.Data)
 * [Simple.Data wiki](http://github.com/markrendle/Simple.Data/wiki/Getting-started)
->>>>>>> 40e2ddde132b5da449479d4e0222849d20b37519
