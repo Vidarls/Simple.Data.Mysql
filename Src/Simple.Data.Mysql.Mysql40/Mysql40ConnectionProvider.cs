@@ -7,7 +7,7 @@ using Simple.Data.Ado.Schema;
 
 namespace Simple.Data.Mysql.Mysql40
 {
-    [Export("sql", typeof(IConnectionProvider))]
+    [Export(typeof(IConnectionProvider))]
     [Export("MySql.Data.MySqlClient", typeof(IConnectionProvider))]
     public class Mysql40ConnectionProvider : IConnectionProvider
     {
