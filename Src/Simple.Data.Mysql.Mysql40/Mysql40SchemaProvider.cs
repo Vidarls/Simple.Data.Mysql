@@ -80,7 +80,7 @@ namespace Simple.Data.Mysql.Mysql40
             foreach (var column in table.Columns)
             {
                 foreignKeys.AddRange(
-                    primaryKeys.Where(key => key.Item2[0].Contains(column.ActualName) && key.Item1.ActualName != table.ActualName).Select(
+                    primaryKeys.Where(key => key.Item2.Length > 0 &&  key.Item2[0].Contains(column.ActualName) && key.Item1.ActualName != table.ActualName).Select(
                         key =>
                         new ForeignKey(new ObjectName(null, table.ActualName),
                                        new List<string> {column.ActualName},new ObjectName(null, key.Item1.ActualName), new List<string> {key.Item2[0]}
