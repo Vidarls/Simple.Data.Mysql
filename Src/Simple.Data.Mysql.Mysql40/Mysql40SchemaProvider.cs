@@ -66,6 +66,48 @@ namespace Simple.Data.Mysql.Mysql40
 
         }
 
+        private String GetSqlMode(IDbConnection connection)
+        {
+            try
+            {
+                //this is not supported in 4.0 and will throw a MySqlException
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandText = "SELECT @@SQL_MODE";
+                    return command.ExecuteScalar().ToString();
+                }
+            }
+            catch (MySqlException) { }
+            return String.Empty;
+        }
+
+        private IEnumerable<ForeignKey> GetForeignKeysFromCreateSql(Table table)
+        {
+            var createTableSql = default(String);
+            var sqlMode = default(String);
+            using (var connection = ConnectionProvider.CreateConnection())
+            {
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandType = CommandType.Text;
+                    command.CommandText = String.Format("SHOW CREATE TABLE `{0}`", table.ActualName);
+                    connection.Open();
+
+                    sqlMode = this.GetSqlMode(connection);
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            createTableSql = (reader[1] as String);
+                        }
+                    }
+                }
+            }
+
+            return MysqlForeignKeyCreator.ExtractForeignKeysFromCreateTableSql(table.ActualName, createTableSql,
+                sqlMode.Contains("ANSI_QUOTES"), !sqlMode.Contains("NO_BACKSLASH_ESCAPES"));
+        }
+
         public IEnumerable<ForeignKey> GetForeignKeys(Table table)
         {
             //Implicit foreign key support
@@ -74,7 +116,10 @@ namespace Simple.Data.Mysql.Mysql40
             //If a column name exists as a primarykey in one table, then a column with the same name can
             //be used as a foreign key in another table.
             var foreignKeys = new List<ForeignKey>();
-            var tables = GetTables();
+            foreignKeys.AddRange(this.GetForeignKeysFromCreateSql(table));
+
+            var existingTables = foreignKeys.Select(fk => fk.MasterTable.Name);
+            var tables = GetTables().Where(t => !existingTables.Contains(table.ActualName));
             var primaryKeys = tables.Select(t => new Tuple<Table, Key>(t, GetPrimaryKey(t))).ToList();
 
             foreach (var column in table.Columns)
