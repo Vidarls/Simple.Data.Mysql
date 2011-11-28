@@ -49,11 +49,12 @@ namespace Simple.Data.Mysql.Mysql40Test.SchemaTests
         [Test]
         public void TestForeignKey()
         {
-            var foreignKey = Schema.FindTable("Orders").ForeignKeys.Single();
-            Assert.AreEqual("customers", foreignKey.MasterTable.ToString());
-            Assert.AreEqual("orders", foreignKey.DetailTable.ToString());
-            Assert.AreEqual("CustomerId", foreignKey.Columns[0]);
-            Assert.AreEqual("CustomerId", foreignKey.UniqueColumns[0]);
+            var foreignKey = Schema.FindTable("Orders").ForeignKeys
+                                   .Single(fk => fk.MasterTable.Name == "customers");
+            Assert.AreEqual("customers", foreignKey.MasterTable.Name);
+            Assert.AreEqual("orders", foreignKey.DetailTable.Name);
+            CollectionAssert.AreEqual(new[] { "CustomerId" }, foreignKey.Columns.AsEnumerable());
+            CollectionAssert.AreEqual(new[] { "CustomerId" }, foreignKey.UniqueColumns.AsEnumerable());
         }
 
         [Test]
