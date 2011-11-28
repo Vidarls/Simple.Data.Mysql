@@ -121,16 +121,17 @@ namespace Simple.Data.Mysql.Mysql40
             var skipTables = foreignKeys.Select(fk => fk.MasterTable.Name)
                                         .Concat(new[] { table.ActualName });
             var tables = GetTables().Where(t => !skipTables.Contains(t.ActualName));
-            var primaryKeys = tables.Select(t => new { Table = t, Key = GetPrimaryKey(t) }).ToList();
+            var primaryKeys = tables.Select(t => new { Table = t, Key = GetPrimaryKey(t) })
+                                    .Where(t => t.Key.Length == 1)
+                                    .Select(t => new { TableName = t.Table.ActualName, ColumnName = t.Key[0] })
+                                    .ToArray();
 
             foreach (var column in table.Columns)
             {
                 foreignKeys.AddRange(
-                    primaryKeys.Where(key => key.Key[0] == column.ActualName).Select(
-                        key =>
-                        new ForeignKey(new ObjectName(null, table.ActualName),
-                                       new List<string> {column.ActualName},new ObjectName(null, key.Table.ActualName), new List<string> {key.Key[0]}
-                                       )));
+                    primaryKeys.Where(key => key.ColumnName == column.ActualName)
+                               .Select(key => new ForeignKey(new ObjectName(null, table.ActualName), new[] { column.ActualName },
+                                                             new ObjectName(null, key.TableName), new[] { key.ColumnName })));
             }
             return foreignKeys;
         }
