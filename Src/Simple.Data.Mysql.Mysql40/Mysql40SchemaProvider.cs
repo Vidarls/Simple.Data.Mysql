@@ -118,14 +118,15 @@ namespace Simple.Data.Mysql.Mysql40
             var foreignKeys = new List<ForeignKey>();
             foreignKeys.AddRange(this.GetForeignKeysFromCreateSql(table));
 
-            var skipTables = foreignKeys.Select(fk => fk.MasterTable.Name);
+            var skipTables = foreignKeys.Select(fk => fk.MasterTable.Name)
+                                        .Concat(new[] { table.ActualName });
             var tables = GetTables().Where(t => !skipTables.Contains(t.ActualName));
             var primaryKeys = tables.Select(t => new Tuple<Table, Key>(t, GetPrimaryKey(t))).ToList();
 
             foreach (var column in table.Columns)
             {
                 foreignKeys.AddRange(
-                    primaryKeys.Where(key => key.Item2[0] == column.ActualName && key.Item1.ActualName != table.ActualName).Select(
+                    primaryKeys.Where(key => key.Item2[0] == column.ActualName).Select(
                         key =>
                         new ForeignKey(new ObjectName(null, table.ActualName),
                                        new List<string> {column.ActualName},new ObjectName(null, key.Item1.ActualName), new List<string> {key.Item2[0]}
