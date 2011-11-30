@@ -41,9 +41,10 @@ namespace Simple.Data.Mysql.Mysql40Test
         [Test]
         public void ShouldFindForeignKeysUsingCreateTableSql()
         {
-            var connectionProvider = new ProviderHelper().GetProviderByConnectionString(ConnectionString);
+            var providerHelper = new ProviderHelper();
+            var connectionProvider = providerHelper.GetProviderByConnectionString(ConnectionString);
             var schemaProvider = connectionProvider.GetSchemaProvider();
-            var databaseSchema = DatabaseSchema.Get(connectionProvider);
+            var databaseSchema = DatabaseSchema.Get(connectionProvider, providerHelper);
             var table = databaseSchema.FindTable("orderitems_fk_test");
             var foreignKeys = schemaProvider.GetForeignKeys(table);
             var items_fk_test = foreignKeys.FirstOrDefault(fk => fk.MasterTable.Name == "items_fk_test");
