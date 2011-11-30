@@ -90,7 +90,7 @@ To provide similar functionality I have implemented a naming conventions based f
 If a column in a table have the same name as the primary key column in another table, this column will be treated as the foreign key with regards to implicit foreign key queries. 
 In the example above the provider would find that the Primary key of Customers have the same name as Invoices.CustomerId and perform the join as required.
 
-At this point this is the only way to do implicit joins with the Mysql Provider, thus if you have an InnoDb database, you would still need to use the naming conventions to get support for this feature.
+Thanks to great effort by Richard Hopton (https://github.com/richardhopton) The provider now supports Foreign key constraings from the InnoDb engine aswell.
 
 ##Resources
 * The Simple.Data project on [Github](http://github.com/markrendle/Simple.Data)
