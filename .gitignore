@@ -15,3 +15,4 @@ TestResults/*
 Releases/2*
 Tools/Mysql/*
 Build/*.zip
+Build/*.xml
