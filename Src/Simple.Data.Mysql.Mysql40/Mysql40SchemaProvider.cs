@@ -175,5 +175,10 @@ namespace Simple.Data.Mysql.Mysql40
 
             return dataTable;
         }
+
+        public string GetDefaultSchema()
+        {
+            return null;
+        }
     }
 }
