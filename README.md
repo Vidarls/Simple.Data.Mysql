@@ -11,6 +11,29 @@ The simple path to get the package from Nuget (http://nuget.org/List/Packages/Si
 (PM> Install-Package Simple.Data.Mysql)
 This will get all dependent libraries in addition to the Simple.Data.Mysql provider.
 
+##Builing and testing
+I've added a build script (using psake https://github.com/psake/psake) That automates a couple of things.
+First, It enables anyone who wants to contribute to automatically download two versions of Mysql (4.0 and 5.5) as no-install packages that will be placed under /Tools. These databases will then be primed with the test data used in the project.
+Second, it will build the project and run all tests on both servers.
+
+###Useful shortcuts:
+(Run in powershell, or use the package management console in Visual Studio)
+
+\Build\psake.ps1 .\default.ps1 InitializeTestDatabases - This fetches the servers (if needed) and primes them with test data.
+
+\Build\psake.ps1 .\default.ps1 -framework 4.0 - Builds project and runs all tests on both servers.
+
+\Build\psake.ps1 .\default.ps1 Start_mysql_40 - Starts the 4.0 version of the Mysql Server
+
+\Build\psake.ps1 .\default.ps1 Stop_mysql_40 - Stops the 4.0 version of the Mysql Server
+
+\Build\psake.ps1 .\default.ps1 Start_mysql_55 - Starts the 5.5 version of the Mysql Server
+
+\Build\psake.ps1 .\default.ps1 Stop_mysql_55 - Stops the 5.5 version of the Mysql Server
+
+###Caveat
+If a build fails, or the script otherwhise crashes, a MysqlServer might be left hanging. Use the commands above to stop them of kill the process (mysqld-nt.exe for 4.0 and mysqld.exe for 5.5)
+
 ##Implicit foreign key support
 One of the key features of Simple.Data is the support for implicit foreign key queries. 
 Thus you can do:
