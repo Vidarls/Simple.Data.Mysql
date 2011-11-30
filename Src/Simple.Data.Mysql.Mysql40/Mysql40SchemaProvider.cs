@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
-using MySql.Data.MySqlClient;
 using Simple.Data.Ado;
 using Simple.Data.Ado.Schema;
 
@@ -77,7 +77,7 @@ namespace Simple.Data.Mysql.Mysql40
                     return command.ExecuteScalar().ToString();
                 }
             }
-            catch (MySqlException) { }
+            catch (DbException) { }
             return String.Empty;
         }
 
@@ -164,9 +164,10 @@ namespace Simple.Data.Mysql.Mysql40
         private DataTable SelectToDataTable(string sql)
         {
             var dataTable = new DataTable();
-            using (var cn = ConnectionProvider.CreateConnection() as MySqlConnection)
+            using (var cn = ConnectionProvider.CreateConnection())
             {
-                using (var adapter = new MySqlDataAdapter(sql, cn))
+                
+                using (var adapter = MysqlConnectorHelper.CreateDataAdapter(sql,cn))
                 {
                     adapter.Fill(dataTable);
                 }

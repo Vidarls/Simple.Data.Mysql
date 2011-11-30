@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel.Composition;
 using System.Data;
-using MySql.Data.MySqlClient;
 using Simple.Data.Ado;
 using Simple.Data.Ado.Schema;
 
@@ -20,7 +19,7 @@ namespace Simple.Data.Mysql.Mysql40
 
         public IDbConnection CreateConnection()
         {
-            return new MySqlConnection(_connectionString);
+            return MysqlConnectorHelper.CreateConnection(_connectionString);
         }
         
         public ISchemaProvider GetSchemaProvider()
