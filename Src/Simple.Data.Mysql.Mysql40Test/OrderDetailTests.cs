@@ -7,7 +7,7 @@ namespace Simple.Data.Mysql.Mysql40Test
     public class OrderDetailTests
     {
         private static readonly string ConnectionString =
-           "server=localhost;user=SimpleData;database=SimpleDataTest;password=test;";
+           "server=localhost;user=root;database=SimpleDataTest;";
 
         [Test]
         public void TestOrderDetail()

@@ -12,7 +12,7 @@ namespace Simple.Data.Mysql.Mysql40Test
     public class FindTests
     {
         private static readonly string ConnectionString =
-           "server=localhost;user=SimpleData;database=SimpleDataTest;password=test;";
+           "server=localhost;user=root;database=SimpleDataTest;";
 
         [TestFixtureSetUp]
         public void DeleteAlice()

@@ -9,7 +9,7 @@ namespace Simple.Data.Mysql.Mysql40Test.SchemaTests
     public class DatabaseSchemaTests : DatabaseSchemaTestsBase
     {
         private static readonly string ConnectionString =
-            "server=localhost;user=SimpleData;database=SimpleDataTest;password=test;";
+            "server=localhost;user=root;database=SimpleDataTest;";
 
         protected override Database GetDatabase() 
         {
