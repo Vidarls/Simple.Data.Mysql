@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>Simple.Data.Mysql</id>
-    <version>0.12.1.1</version>
+    <version>0.12.2.1</version>
     <authors>Vidar Løvbrekke Sømme, Richard Hopton</authors>
     <owners>Vidar Løvbrekke Sømme</owners>
     <description>MySql ADO provider for the Simple.Data library</description>
@@ -13,7 +13,7 @@
     <tags>sql database data ado .net40 mysql</tags>
     <language>en-US</language>
     <dependencies>
-      <dependency id="Simple.Data.Ado" version="0.12.1.1" />
+      <dependency id="Simple.Data.Ado" version="0.12.2.1" />
     </dependencies>
   </metadata>
 </package>

@@ -16,3 +16,4 @@ Releases/2*
 Tools/Mysql/*
 Build/*.zip
 Build/*.xml
+Nuget/Simple.Data.Mysql/.nuspec
