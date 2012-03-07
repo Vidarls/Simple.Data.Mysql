@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using Simple.Data.Ado;
 using Simple.Data.Mysql.Mysql40;
+using System.Linq;
 
 namespace Simple.Data.Mysql.Mysql40Test
 {
@@ -73,6 +74,25 @@ namespace Simple.Data.Mysql.Mysql40Test
             Assert.AreEqual("Alice", user.Name);
             Assert.AreEqual("foo", user.Password);
             Assert.AreEqual(29, user.Age);
+        }
+
+        [Test]
+        public void TestTake()
+        {
+            var db = Database.OpenConnection(ConnectionString);
+            
+            var users = db.Users.All().Take(2);
+            
+            Assert.AreEqual(2,users.ToList().Count);
+        }
+
+        [Test]
+        public void TestSkipTakeOrderBy()
+        {
+            var db = Database.OpenConnection(ConnectionString);
+
+            IEnumerable<dynamic> users = db.Users.All().OrderBy(db.Users.Id).Skip(1).Take(1).ToList();
+            Assert.AreEqual("Steve", users.First().Name);
         }
     }
 }
