@@ -68,6 +68,9 @@ namespace Simple.Data.Mysql.Mysql40
 
         private String GetSqlMode(IDbConnection connection)
         {
+            if (!MysqlConnectorHelper.ConnectionSupportsSqlMode(connection))
+                return String.Empty;
+
             try
             {
                 //this is not supported in 4.0 and will throw a MySqlException
@@ -78,6 +81,7 @@ namespace Simple.Data.Mysql.Mysql40
                 }
             }
             catch (DbException) { }
+            MysqlConnectorHelper.ConnectionDoesNotSupportSqlMode(connection);
             return String.Empty;
         }
 

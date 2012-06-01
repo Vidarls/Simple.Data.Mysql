@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.IO;
@@ -10,6 +11,17 @@ namespace Simple.Data.Mysql.Mysql40
     public static class MysqlConnectorHelper
     {
         private static DbProviderFactory _dbFactory;
+        private static List<string> _connectionsThatDoesNotSupportSqlMode;
+        private static List<string> ConnectionsThatDoesNotSupportSqlMode
+        {
+            get
+            {
+                if (_connectionsThatDoesNotSupportSqlMode == null)
+                    _connectionsThatDoesNotSupportSqlMode = new List<string>();
+
+                return _connectionsThatDoesNotSupportSqlMode;
+            }
+        }
 
         private static DbProviderFactory DbFactory
         {
@@ -26,6 +38,17 @@ namespace Simple.Data.Mysql.Mysql40
             var connection = DbFactory.CreateConnection();
             connection.ConnectionString = connectionString;
             return connection;
+        }
+
+        public static bool ConnectionSupportsSqlMode(IDbConnection connection)
+        {
+            return !ConnectionsThatDoesNotSupportSqlMode.Contains(connection.ConnectionString);
+        }
+
+        public static void ConnectionDoesNotSupportSqlMode(IDbConnection connection)
+        {
+            if (!ConnectionsThatDoesNotSupportSqlMode.Contains(connection.ConnectionString))
+                ConnectionsThatDoesNotSupportSqlMode.Add(connection.ConnectionString);
         }
 
         public static DbDataAdapter CreateDataAdapter(string sqlCommand, IDbConnection connection)
