@@ -8,7 +8,7 @@ using Simple.Data.Ado.Schema;
 
 namespace Simple.Data.Mysql.Mysql40.ShemaDataProviders
 {
-    public interface IMysqlScemaDataProvider
+    internal interface IMysqlScemaDataProvider
     {
         IEnumerable<Table> GetTables();
         IEnumerable<MysqlColumnInfo> GetColumnsFor(Table table);
@@ -16,13 +16,38 @@ namespace Simple.Data.Mysql.Mysql40.ShemaDataProviders
         Key GetPrimaryKeyFor(Table table);
     }
 
-    public class MysqlScemaDataProvider40 : IMysqlScemaDataProvider
+    internal class TableForeignKeyPair
+    {
+        public Table Table { get; private set; }
+        public ForeignKey ForeignKey { get; private set; }
+
+        public TableForeignKeyPair(Table table, ForeignKey foreignKey)
+        {
+            Table = table;
+            ForeignKey = foreignKey;
+        }
+    }
+
+    internal class TableColumnInfoPair
+    {
+        public Table Table { get; private set; }
+        public MysqlColumnInfo ColumnInfo { get; private set; }
+
+        public TableColumnInfoPair(Table table, MysqlColumnInfo columnInfo)
+        {
+            Table = table;
+            ColumnInfo = columnInfo;
+        }
+    }
+
+    internal class MysqlScemaDataProvider40 : IMysqlScemaDataProvider
     {
         private readonly IConnectionProvider _connectionProvider;
 
         private IEnumerable<Table> _cachedTables;
-        private IEnumerable<Tuple<Table,MysqlColumnInfo>> _cachedColumns;
-        private IEnumerable<Tuple<Table, ForeignKey>>  _cachedForeignKeys;
+        private IEnumerable<TableColumnInfoPair> _cachedColumns;
+        private IEnumerable<TableForeignKeyPair>  _cachedForeignKeys;
+      
         private string _sqlMode;
 
         public MysqlScemaDataProvider40(IConnectionProvider connectionProvider)
@@ -68,7 +93,7 @@ namespace Simple.Data.Mysql.Mysql40.ShemaDataProviders
 
         private void FillColumnCache(IDbConnection connection)
         {
-            var columns = new List<Tuple<Table, MysqlColumnInfo>>();
+            var columns = new List<TableColumnInfoPair>();
             var command = connection.CreateCommand();
             command.CommandType = CommandType.Text;
             command.CommandText = GetTables().Select(t => string.Format("SHOW COLUMNS FROM {0};", t.ActualName)).Aggregate((result, next) => result += next);
@@ -79,7 +104,7 @@ namespace Simple.Data.Mysql.Mysql40.ShemaDataProviders
                 {
                     while (reader.Read())
                     {
-                        columns.Add(new Tuple<Table, MysqlColumnInfo>(
+                        columns.Add(new TableColumnInfoPair(
                                         _cachedTables.ElementAt(i),
                                         MysqlColumnInfo.CreateColumnInfo(
                                             reader[0].ToString(),
@@ -97,67 +122,62 @@ namespace Simple.Data.Mysql.Mysql40.ShemaDataProviders
 
         private void FillForeignKeyCache(IDbConnection connection)
         {
-            var allForeignKeys = new List<Tuple<Table, ForeignKey>>();
-            var explicitForeignKeys = new List<Tuple<Table, ForeignKey>>();
-            var implicitForeignKeys = new List<Tuple<Table, ForeignKey>>();
-            foreach (var table in GetTables())
-            {
-                var foreignKeys = new List<ForeignKey>();
-                foreignKeys.AddRange(GetForeignKeysFromCreateSql(table, connection));
-                foreignKeys.AddRange(GetImplicitForeignKeys(table, GetTablesWithInnoDbForeignKeys(foreignKeys)));
-                var table1 = table;
-                allForeignKeys.AddRange(foreignKeys.Select(f => new Tuple<Table,ForeignKey>(table1,f)));
-            }
+            var allForeignKeys = new List<TableForeignKeyPair>();
+            allForeignKeys.AddRange(GetExplicitForeignKeys(connection));
+            allForeignKeys.AddRange(GetImplicitForeignKeys(allForeignKeys.Select(i => i.Table)));
             _cachedForeignKeys = allForeignKeys;
-
         }
 
-        private IEnumerable<Table> GetTablesWithInnoDbForeignKeys(IEnumerable<ForeignKey> foreignKeys)
+        private IEnumerable<TableForeignKeyPair> GetExplicitForeignKeys(IDbConnection connection)
         {
-            return GetTables().Where(t=>foreignKeys.Select(f=>f.MasterTable.Name).Contains(t.ActualName));
-        }
+            var foreignKeys = new List<TableForeignKeyPair>();
+            var sqlMode = GetSqlMode(connection);
 
-        private IEnumerable<ForeignKey> GetForeignKeysFromCreateSql(Table table, IDbConnection connection)
-        {
-            var createTableSql = default(String);
-            var sqlMode = default(String);
-            
-                using (var command = connection.CreateCommand())
+            var command = connection.CreateCommand();
+            command.CommandType = CommandType.Text;
+            command.CommandText = GetTables().Select(t => string.Format("SHOW CREATE TABLE `{0}`;", t.ActualName)).Aggregate((result, next) => result += next);
+
+            using (var reader = command.ExecuteReader())
+            {
+                var i = 0;
+                do
                 {
-                    command.CommandType = CommandType.Text;
-                    command.CommandText = String.Format("SHOW CREATE TABLE `{0}`", table.ActualName);
-
-                    sqlMode = this.GetSqlMode(connection);
-                    using (var reader = command.ExecuteReader())
+                    while (reader.Read())
                     {
-                        if (reader.Read())
-                        {
-                            createTableSql = (reader[1] as String);
-                        }
+                        foreignKeys.AddRange(
+                            MysqlForeignKeyCreator.ExtractForeignKeysFromCreateTableSql(GetTables().Select(t => t.ActualName).ElementAt(i), 
+                                                                                        reader[1].ToString(), 
+                                                                                        sqlMode.Contains("ANSI_QUOTES"), !sqlMode.Contains("NO_BACKSLASH_ESCAPES")
+                                                                                        ).Select(fk => new TableForeignKeyPair(GetTables().ElementAt(i),fk))
+                            );
                     }
-                }
-
-            return MysqlForeignKeyCreator.ExtractForeignKeysFromCreateTableSql(table.ActualName, createTableSql,
-                sqlMode.Contains("ANSI_QUOTES"), !sqlMode.Contains("NO_BACKSLASH_ESCAPES"));
+                    i++;
+                } while ((reader.NextResult()));
+            }
+            return foreignKeys;
         }
 
-        private IEnumerable<ForeignKey> GetImplicitForeignKeys(Table table, IEnumerable<Table> tablesWithInnoDbForeignKeys)
+        private IEnumerable<TableForeignKeyPair> GetImplicitForeignKeys(IEnumerable<Table> tablesWithInnoDbForeignKeys)
         {
             //Implicit foreign key support
             //MyIsam (the most used Mysql db engine) does not support foreign key constraint
             //Foreign key support is therefor implemented in an implicit way based on naming conventions
             //If a column name exists as a primarykey in one table, then a column with the same name can
             //be used as a foreign key in another table.
-            var foreignKeys = new List<ForeignKey>();
-            var primaryKeyColumns = _cachedColumns.Where(t => !t.Item1.Equals(table) && t.Item2.IsPrimaryKey && !tablesWithInnoDbForeignKeys.Contains(t.Item1));
-            var columns = GetColumnsFor(table);
-            foreach (var column in columns)
+            var foreignKeys = new List<TableForeignKeyPair>();
+
+            foreach (var table in _cachedTables)
             {
-                foreignKeys.AddRange(
-                    primaryKeyColumns.Where(c => c.Item2.Name == column.Name).Select(
-                        c =>
-                        new ForeignKey(new ObjectName(null, table.ActualName), new[] {column.Name},
-                                       new ObjectName(null, c.Item1.ActualName), new[] {c.Item2.Name})));
+                var primaryKeyColumns = _cachedColumns.Where(t => !t.Table.Equals(table) && t.ColumnInfo.IsPrimaryKey && !tablesWithInnoDbForeignKeys.Contains(t.Table));
+                var columns = GetColumnsFor(table);
+                foreach (var column in columns)
+                {
+                    foreignKeys.AddRange(
+                        primaryKeyColumns.Where(c => c.ColumnInfo.Name == column.Name).Select(
+                            c =>
+                            new TableForeignKeyPair(table,new ForeignKey(new ObjectName(null, table.ActualName), new[] { column.Name },
+                                           new ObjectName(null, c.Table.ActualName), new[] { c.ColumnInfo.Name }))));
+                }
             }
             return foreignKeys;
         }
@@ -189,7 +209,7 @@ namespace Simple.Data.Mysql.Mysql40.ShemaDataProviders
             if (_cachedColumns == null)
                 FillSchemaCache();
 
-            var found = _cachedColumns.Where(c=>c.Item1.Equals(table)).Select(c=>c.Item2);
+            var found = _cachedColumns.Where(c=>c.Table.Equals(table)).Select(c=>c.ColumnInfo);
             return found;
         }
 
@@ -197,7 +217,7 @@ namespace Simple.Data.Mysql.Mysql40.ShemaDataProviders
         {
             if (_cachedForeignKeys == null)
                 FillSchemaCache();
-            return _cachedForeignKeys.Where(c => c.Item1.Equals(table)).Select(c => c.Item2);
+            return _cachedForeignKeys.Where(c => c.Table.Equals(table)).Select(c => c.ForeignKey);
         }
 
         public Key GetPrimaryKeyFor(Table table)
