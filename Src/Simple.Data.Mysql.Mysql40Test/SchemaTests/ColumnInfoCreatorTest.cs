@@ -13,29 +13,43 @@ namespace Simple.Data.Mysql.Mysql40Test.SchemaTests
         [Test]
         public void ParsesTypeFromTypeinfoWithCapacity()
         {
-            var columnInfo = MysqlColumnInfoCreator.CreateColumnInfo("", "", "varchar(255)");
+            var columnInfo = MysqlColumnInfo.CreateColumnInfo("", "", "varchar(255)","");
             Assert.AreEqual(DbType.String,columnInfo.DbType, "Dbtype is not correct");
         }
 
         [Test]
         public void ParsesCapacityFromTypeinfoWithCapacity()
         {
-            var columnInfo = MysqlColumnInfoCreator.CreateColumnInfo("", "", "varchar(255)");
+            var columnInfo = MysqlColumnInfo.CreateColumnInfo("", "", "varchar(255)","");
             Assert.AreEqual(255,columnInfo.Capacity, "Capacity is not correct");
         }
 
         [Test]
         public void ParsesTypeFromTypeinfoWithoutCapacity()
         {
-            var columnInfo = MysqlColumnInfoCreator.CreateColumnInfo("", "", "timestamp");
+            var columnInfo = MysqlColumnInfo.CreateColumnInfo("", "", "timestamp","");
             Assert.AreEqual(DbType.DateTime,columnInfo.DbType, "Dbtype is not correct");
         }
 
         [Test]
         public void CapacityShouldBeZeroWhenParsingFromTypeinfoWithoutCapacity()
         {
-            var columnInfo = MysqlColumnInfoCreator.CreateColumnInfo("", "", "timestamp");
+            var columnInfo = MysqlColumnInfo.CreateColumnInfo("", "", "timestamp","");
             Assert.AreEqual(0,columnInfo.Capacity, "Capacity is not zero");
+        }
+
+        [Test]
+        public void SholdBePrimaryKeyWhenPassedPriAsLastParameter()
+        {
+            var columnInfo = MysqlColumnInfo.CreateColumnInfo("", "", "int(11)", "PRI");
+            Assert.True(columnInfo.IsPrimaryKey, "Column should have been designated as primaryKey");
+        }
+
+        [Test]
+        public void SholdNotBePrimaryKeyWhenNotPassedPriAsLastParameter()
+        {
+            var columnInfo = MysqlColumnInfo.CreateColumnInfo("", "", "int(11)", "");
+            Assert.False(columnInfo.IsPrimaryKey, "Column should not have been designated as primaryKey");
         }
     }
 }

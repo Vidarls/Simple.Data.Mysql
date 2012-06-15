@@ -3,6 +3,7 @@ using System.ComponentModel.Composition;
 using System.Data;
 using Simple.Data.Ado;
 using Simple.Data.Ado.Schema;
+using Simple.Data.Mysql.Mysql40.ShemaDataProviders;
 
 namespace Simple.Data.Mysql.Mysql40
 {
@@ -24,7 +25,7 @@ namespace Simple.Data.Mysql.Mysql40
         
         public ISchemaProvider GetSchemaProvider()
         {
-            return new Mysql40SchemaProvider(this);
+            return new Mysql40SchemaProvider(this, new MysqlScemaDataProvider40(this));
         }
 
         public string ConnectionString
