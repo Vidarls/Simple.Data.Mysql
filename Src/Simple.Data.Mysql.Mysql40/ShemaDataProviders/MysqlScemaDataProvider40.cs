@@ -96,7 +96,7 @@ namespace Simple.Data.Mysql.Mysql40.ShemaDataProviders
             var columns = new List<TableColumnInfoPair>();
             var command = connection.CreateCommand();
             command.CommandType = CommandType.Text;
-            command.CommandText = GetTables().Select(t => string.Format("SHOW COLUMNS FROM {0};", t.ActualName)).Aggregate((result, next) => result += next);
+            command.CommandText = GetTables().Select(t => string.Format("SHOW COLUMNS FROM `{0}`;", t.ActualName)).Aggregate((result, next) => result += next);
             using (var reader = command.ExecuteReader())
             {
                 var i = 0;
