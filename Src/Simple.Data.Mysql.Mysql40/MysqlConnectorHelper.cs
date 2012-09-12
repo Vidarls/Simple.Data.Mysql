@@ -42,7 +42,7 @@ namespace Simple.Data.Mysql.Mysql40
         {
             var mysqlAssembly =
                 Assembly.LoadFile(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase.Substring(8)), "MySql.Data.dll"));
-            var mysqlDbFactoryType = mysqlAssembly.GetTypes().Single(t => t.Name == "MySqlClientFactory");
+            var mysqlDbFactoryType = mysqlAssembly.GetType("MySql.Data.MySqlClient.MySqlClientFactory");
             return (DbProviderFactory) Activator.CreateInstance(mysqlDbFactoryType);
         }
     }
