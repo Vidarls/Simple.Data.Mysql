@@ -17,3 +17,5 @@ Tools/Mysql/*
 Build/*.zip
 Build/*.xml
 Nuget/Simple.Data.Mysql/.nuspec
+*.ncrunchsolution
+nohup.out
