@@ -17,7 +17,7 @@ namespace Simple.Data.Mysql.Mysql40
             yield return sb.ToString();
         }
 
-        public IEnumerable<string> ApplyPaging(string sql, int skip, int take)
+        public IEnumerable<string> ApplyPaging(string sql, string[] keys, int skip, int take)
         {
             var sb = new StringBuilder(sql);
             sb.AppendFormat(" LIMIT {0}, {1}", skip, take);
