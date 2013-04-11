@@ -1,11 +1,13 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Express 2012 for Windows Desktop
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simple.Data.Mysql.Mysql40", "Simple.Data.Mysql.Mysql40\Simple.Data.Mysql.Mysql40.csproj", "{6BB6D48E-E2AB-4AF7-8FE3-10A3AACE3FC7}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{351816E0-7DD4-440B-AA77-9F3F85709606}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simple.Data.Mysql.Mysql40Test", "Simple.Data.Mysql.Mysql40Test\Simple.Data.Mysql.Mysql40Test.csproj", "{B6507B06-C337-4661-B5D0-E23786CDEE87}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simple.Data.Mysql.Mysql50", "Simple.Data.Mysql.Mysql50\Simple.Data.Mysql.Mysql50.csproj", "{AE447A43-AF52-4035-95D0-80DC99DB425B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,6 +33,14 @@ Global
 		{B6507B06-C337-4661-B5D0-E23786CDEE87}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B6507B06-C337-4661-B5D0-E23786CDEE87}.Release|x86.ActiveCfg = Release|x86
 		{B6507B06-C337-4661-B5D0-E23786CDEE87}.Release|x86.Build.0 = Release|x86
+		{AE447A43-AF52-4035-95D0-80DC99DB425B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE447A43-AF52-4035-95D0-80DC99DB425B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE447A43-AF52-4035-95D0-80DC99DB425B}.Debug|x86.ActiveCfg = Debug|x86
+		{AE447A43-AF52-4035-95D0-80DC99DB425B}.Debug|x86.Build.0 = Debug|x86
+		{AE447A43-AF52-4035-95D0-80DC99DB425B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE447A43-AF52-4035-95D0-80DC99DB425B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE447A43-AF52-4035-95D0-80DC99DB425B}.Release|x86.ActiveCfg = Release|x86
+		{AE447A43-AF52-4035-95D0-80DC99DB425B}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
