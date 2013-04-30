@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 
-namespace Simple.Data.Mysql.Mysql40
+namespace Simple.Data.Mysql
 {
     public static class MysqlConnectorHelper
     {

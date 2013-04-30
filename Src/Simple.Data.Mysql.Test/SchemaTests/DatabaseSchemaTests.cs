@@ -3,7 +3,7 @@ using System.Linq;
 using NUnit.Framework;
 using Simple.Data.TestHelper;
 
-namespace Simple.Data.Mysql.Mysql40Test.SchemaTests
+namespace Simple.Data.Mysql.Test.SchemaTests
 {
     [TestFixture]
     public class DatabaseSchemaTests : DatabaseSchemaTestsBase

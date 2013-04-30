@@ -3,13 +3,13 @@ using System.ComponentModel.Composition;
 using System.Data;
 using Simple.Data.Ado;
 using Simple.Data.Ado.Schema;
-using Simple.Data.Mysql.Mysql40.ShemaDataProviders;
+using Simple.Data.Mysql.ShemaDataProviders;
 
-namespace Simple.Data.Mysql.Mysql40
+namespace Simple.Data.Mysql
 {
     [Export(typeof(IConnectionProvider))]
     [Export("MySql.Data.MySqlClient", typeof(IConnectionProvider))]
-    public class Mysql40ConnectionProvider : IConnectionProvider
+    public class MysqlConnectionProvider : IConnectionProvider
     {
         private string _connectionString;
         
@@ -25,7 +25,7 @@ namespace Simple.Data.Mysql.Mysql40
         
         public ISchemaProvider GetSchemaProvider()
         {
-            return new Mysql40SchemaProvider(this, new MysqlScemaDataProvider40(this));
+            return new MysqlSchemaProvider(this, new MysqlScemaDataProvider40(this));
         }
 
         public string ConnectionString

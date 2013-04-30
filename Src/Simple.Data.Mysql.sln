@@ -1,11 +1,9 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simple.Data.Mysql.Mysql40", "Simple.Data.Mysql.Mysql40\Simple.Data.Mysql.Mysql40.csproj", "{6BB6D48E-E2AB-4AF7-8FE3-10A3AACE3FC7}"
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simple.Data.Mysql", "Simple.Data.Mysql\Simple.Data.Mysql.csproj", "{6BB6D48E-E2AB-4AF7-8FE3-10A3AACE3FC7}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{351816E0-7DD4-440B-AA77-9F3F85709606}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simple.Data.Mysql.Mysql40Test", "Simple.Data.Mysql.Mysql40Test\Simple.Data.Mysql.Mysql40Test.csproj", "{B6507B06-C337-4661-B5D0-E23786CDEE87}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simple.Data.Mysql.Test", "Simple.Data.Mysql.Test\Simple.Data.Mysql.Test.csproj", "{B6507B06-C337-4661-B5D0-E23786CDEE87}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -34,8 +32,5 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{B6507B06-C337-4661-B5D0-E23786CDEE87} = {351816E0-7DD4-440B-AA77-9F3F85709606}
 	EndGlobalSection
 EndGlobal

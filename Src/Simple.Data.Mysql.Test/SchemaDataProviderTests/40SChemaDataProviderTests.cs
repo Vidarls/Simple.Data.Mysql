@@ -6,11 +6,11 @@ using FluentAssertions;
 using NUnit.Framework;
 using Simple.Data.Ado;
 using Simple.Data.Ado.Schema;
-using Simple.Data.Mysql.Mysql40;
-using Simple.Data.Mysql.Mysql40.ShemaDataProviders;
+using Simple.Data.Mysql;
+using Simple.Data.Mysql.ShemaDataProviders;
 using Enumerable = System.Linq.Enumerable;
 
-namespace Simple.Data.Mysql.Mysql40Test.SchemaDataProviderTests
+namespace Simple.Data.Mysql.Test.SchemaDataProviderTests
 {
     public class ColumnDataTests40
     {
@@ -29,7 +29,7 @@ namespace Simple.Data.Mysql.Mysql40Test.SchemaDataProviderTests
                                           new Column("Age", table, false, DbType.Int32, 11)
 
                                       };
-            var connectionProvider = new Mysql40.Mysql40ConnectionProvider();
+            var connectionProvider = new Mysql.MysqlConnectionProvider();
             connectionProvider.SetConnectionString(ConnectionString);
 
             var schemaDataProvider = new MysqlScemaDataProvider40(connectionProvider);
@@ -43,7 +43,7 @@ namespace Simple.Data.Mysql.Mysql40Test.SchemaDataProviderTests
         {
             var table = new Table("Users", null, TableType.Table);
             
-            var realConnectionProvider = new Mysql40.Mysql40ConnectionProvider();
+            var realConnectionProvider = new Mysql.MysqlConnectionProvider();
             realConnectionProvider.SetConnectionString(ConnectionString);
             var proxiedConnectionProvider = A.Fake <IConnectionProvider>((o) => o.Wrapping(realConnectionProvider));
             
@@ -77,7 +77,7 @@ namespace Simple.Data.Mysql.Mysql40Test.SchemaDataProviderTests
                                          new Table("orders_fk_test", null, TableType.Table),
                                          new Table("users", null, TableType.Table)
                                      };
-            var connectionProvider = new Mysql40.Mysql40ConnectionProvider();
+            var connectionProvider = new Mysql.MysqlConnectionProvider();
             connectionProvider.SetConnectionString(ConnectionString);
 
             var schemaDataProvider = new MysqlScemaDataProvider40(connectionProvider);

@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
-using Simple.Data.Mysql.Mysql40;
+using Simple.Data.Mysql;
 using NUnit.Framework;
 
-namespace Simple.Data.Mysql.Mysql40Test.SchemaTests
+namespace Simple.Data.Mysql.Test.SchemaTests
 {
     public class ColumnInfoCreatorTest
     {

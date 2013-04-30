@@ -1,7 +1,7 @@
 ﻿using System;
 using NUnit.Framework;
 
-namespace Simple.Data.Mysql.Mysql40Test
+namespace Simple.Data.Mysql.Test
 {
     [TestFixture]
     public class OrderDetailTests

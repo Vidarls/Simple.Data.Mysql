@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 
-namespace Simple.Data.Mysql.Mysql40Test
+namespace Simple.Data.Mysql.Test
 {
     [TestFixture]
     public class MysqlConnectorHelperTest
@@ -8,15 +8,15 @@ namespace Simple.Data.Mysql.Mysql40Test
         [Test]
         public void CanCreateDbConnection()
         {
-            var connection = Mysql40.MysqlConnectorHelper.CreateConnection("server=localhost;user=root;database=SimpleDataTest;");
+            var connection = Mysql.MysqlConnectorHelper.CreateConnection("server=localhost;user=root;database=SimpleDataTest;");
             Assert.AreEqual("MySqlConnection", connection.GetType().Name);
         }
 
         [Test]
         public void CanCreateDataAdapter()
         {
-            var adapter = Mysql40.MysqlConnectorHelper.CreateDataAdapter("SHOW TABLES",
-                                                                         Mysql40.MysqlConnectorHelper.CreateConnection(
+            var adapter = Mysql.MysqlConnectorHelper.CreateDataAdapter("SHOW TABLES",
+                                                                         Mysql.MysqlConnectorHelper.CreateConnection(
                                                                              "server=localhost;user=root;database=SimpleDataTest;"));
             Assert.AreEqual("MySqlDataAdapter", adapter.GetType().Name);
         }

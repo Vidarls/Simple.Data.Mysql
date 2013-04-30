@@ -1,20 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Common;
-using System.Linq;
-using Simple.Data.Ado;
+﻿using Simple.Data.Ado;
 using Simple.Data.Ado.Schema;
-using Simple.Data.Mysql.Mysql40.ShemaDataProviders;
+using Simple.Data.Mysql.ShemaDataProviders;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace Simple.Data.Mysql.Mysql40
+namespace Simple.Data.Mysql
 {
-    class Mysql40SchemaProvider : ISchemaProvider
+    class MysqlSchemaProvider : ISchemaProvider
     {
         private readonly IConnectionProvider _connectionProvider;
         private readonly IMysqlScemaDataProvider _mysqlScemaDataProvider;
 
-        public Mysql40SchemaProvider(IConnectionProvider connectionProvider, IMysqlScemaDataProvider mysqlScemaDataProvider)
+        public MysqlSchemaProvider(IConnectionProvider connectionProvider, IMysqlScemaDataProvider mysqlScemaDataProvider)
         {
             if (connectionProvider == null) throw new ArgumentNullException("connectionProvider");
             _connectionProvider = connectionProvider;

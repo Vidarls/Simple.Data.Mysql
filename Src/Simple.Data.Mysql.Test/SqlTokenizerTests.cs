@@ -1,7 +1,7 @@
 ﻿using NUnit.Framework;
-using Simple.Data.Mysql.Mysql40;
+using Simple.Data.Mysql;
 
-namespace Simple.Data.Mysql.Mysql40Test
+namespace Simple.Data.Mysql.Test
 {
     [TestFixture]
     public class SqlTokenizerTest
