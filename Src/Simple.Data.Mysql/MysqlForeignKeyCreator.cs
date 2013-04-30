@@ -1,11 +1,10 @@
-﻿using System;
+﻿using Simple.Data.Ado;
+using Simple.Data.Ado.Schema;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Simple.Data.Ado.Schema;
-using Simple.Data.Ado;
 
-namespace Simple.Data.Mysql.Mysql40
+namespace Simple.Data.Mysql
 {
     internal static class MysqlForeignKeyCreator
     {

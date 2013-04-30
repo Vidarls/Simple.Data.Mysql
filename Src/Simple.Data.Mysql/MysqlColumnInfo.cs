@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Text.RegularExpressions;
 
-namespace Simple.Data.Mysql.Mysql40
+namespace Simple.Data.Mysql
 {
     public class MysqlColumnInfo
     {

@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using NUnit.Framework;
 using Simple.Data.Ado;
-using Simple.Data.Mysql.Mysql40;
+using Simple.Data.Mysql;
 using System.Linq;
 
-namespace Simple.Data.Mysql.Mysql40Test
+namespace Simple.Data.Mysql.Test
 {
     /// <summary>
     /// Summary description for FindTests
@@ -26,7 +26,7 @@ namespace Simple.Data.Mysql.Mysql40Test
         public void TestProviderWithConnectionString()
         {
             var provider = new ProviderHelper().GetProviderByConnectionString(ConnectionString);
-            Assert.IsInstanceOf(typeof(Mysql40ConnectionProvider), provider);
+            Assert.IsInstanceOf(typeof(MysqlConnectionProvider), provider);
         }
 
         [Test]

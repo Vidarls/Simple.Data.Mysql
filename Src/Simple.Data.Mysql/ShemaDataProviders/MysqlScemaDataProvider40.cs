@@ -6,7 +6,7 @@ using System.Data;
 using Simple.Data.Ado;
 using Simple.Data.Ado.Schema;
 
-namespace Simple.Data.Mysql.Mysql40.ShemaDataProviders
+namespace Simple.Data.Mysql.ShemaDataProviders
 {
     internal interface IMysqlScemaDataProvider
     {

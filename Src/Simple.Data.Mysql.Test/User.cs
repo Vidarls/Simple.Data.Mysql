@@ -1,4 +1,4 @@
-﻿namespace Simple.Data.Mysql.Mysql40Test
+﻿namespace Simple.Data.Mysql.Test
 {
     class User
     {

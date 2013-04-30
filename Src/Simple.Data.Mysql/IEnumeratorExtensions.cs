@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Simple.Data.Mysql.Mysql40
+namespace Simple.Data.Mysql
 {
     internal static class IEnumeratorExtensions
     {

@@ -1,11 +1,9 @@
-﻿using System;
+﻿using Simple.Data.Ado;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using System.Linq;
 using System.Text;
-using Simple.Data.Ado;
 
-namespace Simple.Data.Mysql.Mysql40
+namespace Simple.Data.Mysql
 {
     [Export(typeof(IQueryPager))]
     public class MysqlQueryPager : IQueryPager

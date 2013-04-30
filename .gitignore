@@ -18,3 +18,4 @@ Build/*.zip
 Build/*.xml
 Nuget/Simple.Data.Mysql/.nuspec
 *.ncrunchsolution
+*.DotSettings*
