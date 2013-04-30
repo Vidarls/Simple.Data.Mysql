@@ -112,7 +112,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Simple.Data.Mysql.Mysql40\Simple.Data.Mysql.csproj">
+    <ProjectReference Include="..\Simple.Data.Mysql\Simple.Data.Mysql.csproj">
       <Project>{6BB6D48E-E2AB-4AF7-8FE3-10A3AACE3FC7}</Project>
       <Name>Simple.Data.Mysql</Name>
     </ProjectReference>
