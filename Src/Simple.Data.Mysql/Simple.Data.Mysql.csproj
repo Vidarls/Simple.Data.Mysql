@@ -71,6 +71,7 @@
   <ItemGroup>
     <Compile Include="IEnumeratorExtensions.cs" />
     <Compile Include="MysqlConnectorHelper.cs" />
+    <Compile Include="MysqlCustomInserter.cs" />
     <Compile Include="MysqlForeignKeyCreator.cs" />
     <Compile Include="MysqlQueryPager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -95,6 +95,7 @@
   <ItemGroup>
     <Compile Include="FindTests.cs" />
     <Compile Include="ForeignKeyTests.cs" />
+    <Compile Include="InsertTests.cs" />
     <Compile Include="MysqlConnectorHelperTest.cs" />
     <Compile Include="OrderDetailTests.cs" />
     <Compile Include="SchemaDataProviderTests\40SChemaDataProviderTests.cs" />

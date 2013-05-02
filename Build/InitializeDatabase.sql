@@ -127,4 +127,14 @@ CREATE TABLE orderitems_fk_test (
   CONSTRAINT fk_test_orderitems_orders FOREIGN KEY (OrdersId) REFERENCES orders_fk_test(OrderId)
 ) ENGINE=InnoDB;
 
+--
+-- Table structure for table `empty_table`
+--
+
+CREATE TABLE empty_table (
+  Id int(11) NOT NULL auto_increment,
+  Somevalue varchar(255) default NULL,
+  PRIMARY KEY  (Id)
+) ENGINE=MyISAM;
+
 SHOW TABLES;
