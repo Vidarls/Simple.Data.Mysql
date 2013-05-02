@@ -8,39 +8,7 @@ using Simple.Data.Ado.Schema;
 
 namespace Simple.Data.Mysql.ShemaDataProviders
 {
-    internal interface IMysqlScemaDataProvider
-    {
-        IEnumerable<Table> GetTables();
-        IEnumerable<MysqlColumnInfo> GetColumnsFor(Table table);
-        IEnumerable<ForeignKey> GetForeignKeysFor(Table table);
-        Key GetPrimaryKeyFor(Table table);
-    }
-
-    internal class TableForeignKeyPair
-    {
-        public Table Table { get; private set; }
-        public ForeignKey ForeignKey { get; private set; }
-
-        public TableForeignKeyPair(Table table, ForeignKey foreignKey)
-        {
-            Table = table;
-            ForeignKey = foreignKey;
-        }
-    }
-
-    internal class TableColumnInfoPair
-    {
-        public Table Table { get; private set; }
-        public MysqlColumnInfo ColumnInfo { get; private set; }
-
-        public TableColumnInfoPair(Table table, MysqlColumnInfo columnInfo)
-        {
-            Table = table;
-            ColumnInfo = columnInfo;
-        }
-    }
-
-    internal class MysqlScemaDataProvider40 : IMysqlScemaDataProvider
+    internal class MysqlSchemaDataProvider40 : IMysqlSchemaDataProvider
     {
         private readonly IConnectionProvider _connectionProvider;
 
@@ -50,7 +18,7 @@ namespace Simple.Data.Mysql.ShemaDataProviders
       
         private string _sqlMode;
 
-        public MysqlScemaDataProvider40(IConnectionProvider connectionProvider)
+        public MysqlSchemaDataProvider40(IConnectionProvider connectionProvider)
         {
             _connectionProvider = connectionProvider;
         }
@@ -184,24 +152,7 @@ namespace Simple.Data.Mysql.ShemaDataProviders
 
         private String GetSqlMode(IDbConnection connection)
         {
-            if (_sqlMode == null)
-            {
-                try
-                {
-                    //this is not supported in 4.0 and will throw a MySqlException
-                    using (var command = connection.CreateCommand())
-                    {
-                        command.CommandText = "SELECT @@SQL_MODE";
-                        _sqlMode = command.ExecuteScalar().ToString();
-                    }
-                }
-                catch (DbException)
-                {
-                }
-                _sqlMode = String.Empty;
-            }
-
-            return _sqlMode;
+            return "";
         }
 
         public IEnumerable<MysqlColumnInfo> GetColumnsFor(Table table)
@@ -223,6 +174,11 @@ namespace Simple.Data.Mysql.ShemaDataProviders
         public Key GetPrimaryKeyFor(Table table)
         {
             return new Key(GetColumnsFor(table).Where(c=>c.IsPrimaryKey).Select(c=>c.Name));
+        }
+
+        public string QuoteObjectName(string unquotedName)
+        {
+            return unquotedName;
         }
     }
 }

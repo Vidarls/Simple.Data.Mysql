@@ -1,19 +1,18 @@
-﻿using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using FakeItEasy;
+﻿using FakeItEasy;
 using FluentAssertions;
 using NUnit.Framework;
 using Simple.Data.Ado;
 using Simple.Data.Ado.Schema;
-using Simple.Data.Mysql;
 using Simple.Data.Mysql.ShemaDataProviders;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
 using Enumerable = System.Linq.Enumerable;
 
 namespace Simple.Data.Mysql.Test.SchemaDataProviderTests
 {
     [TestFixture]
-    public class ColumnDataTests40
+    public class ColumnDataTests50
     {
         private const string ConnectionString = "server=localhost;user=root;database=SimpleDataTest;";
 
@@ -32,7 +31,7 @@ namespace Simple.Data.Mysql.Test.SchemaDataProviderTests
             var connectionProvider = new MysqlConnectionProvider();
             connectionProvider.SetConnectionString(ConnectionString);
 
-            var schemaDataProvider = new MysqlSchemaDataProvider40(connectionProvider);
+            var schemaDataProvider = new MysqlSchemaDataProvider50(connectionProvider);
             var columns = schemaDataProvider.GetColumnsFor(table).Select(c => new Column(c.Name, table, c.IsAutoincrement, c.DbType, c.Capacity)); 
             Assert.AreEqual(expectedColumns.Count, columns.Count());
             columns.Should().Contain(expectedColumns);
@@ -47,7 +46,7 @@ namespace Simple.Data.Mysql.Test.SchemaDataProviderTests
             realConnectionProvider.SetConnectionString(ConnectionString);
             var proxiedConnectionProvider = A.Fake <IConnectionProvider>((o) => o.Wrapping(realConnectionProvider));
             
-            var schemaDataProvider = new MysqlSchemaDataProvider40(proxiedConnectionProvider);
+            var schemaDataProvider = new MysqlSchemaDataProvider50(proxiedConnectionProvider);
             Enumerable.ToList(schemaDataProvider.GetColumnsFor(table));
             Enumerable.ToList(schemaDataProvider.GetColumnsFor(table));
             Enumerable.ToList(schemaDataProvider.GetColumnsFor(table));
@@ -56,19 +55,18 @@ namespace Simple.Data.Mysql.Test.SchemaDataProviderTests
         }
 
         [Test]
-        public void DoesNotQuoteNames()
+        public void QuotesNames()
         {
-            var connectionprovider = new MysqlConnectionProvider();
-            connectionprovider.SetConnectionString(ConnectionString);
-            var schemaDataProvider = new MysqlSchemaDataProvider40(connectionprovider);
-            var unquoted = "Unquoted";
+            var connectionProvider = new MysqlConnectionProvider();
+            var schemaDataProvider = new MysqlSchemaDataProvider50(connectionProvider);
+            var unquoted = "unquoted";
             var quoted = schemaDataProvider.QuoteObjectName(unquoted);
-            Assert.AreEqual(unquoted, quoted);
+            Assert.AreEqual("`" + unquoted + "`", quoted);
         }
     }
 
     [TestFixture]
-    public class TableDataTests40
+    public class TableDataTests50
     {
         private const string ConnectionString = "server=localhost;user=root;database=SimpleDataTest;";
 
@@ -89,7 +87,7 @@ namespace Simple.Data.Mysql.Test.SchemaDataProviderTests
             var connectionProvider = new MysqlConnectionProvider();
             connectionProvider.SetConnectionString(ConnectionString);
 
-            var schemaDataProvider = new MysqlSchemaDataProvider40(connectionProvider);
+            var schemaDataProvider = new MysqlSchemaDataProvider50(connectionProvider);
             var tables = schemaDataProvider.GetTables();
 
             tables.Should().Contain(expectedTables);

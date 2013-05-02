@@ -10,13 +10,13 @@ namespace Simple.Data.Mysql
     class MysqlSchemaProvider : ISchemaProvider
     {
         private readonly IConnectionProvider _connectionProvider;
-        private readonly IMysqlScemaDataProvider _mysqlScemaDataProvider;
+        private readonly IMysqlSchemaDataProvider _mysqlSchemaDataProvider;
 
-        public MysqlSchemaProvider(IConnectionProvider connectionProvider, IMysqlScemaDataProvider mysqlScemaDataProvider)
+        public MysqlSchemaProvider(IConnectionProvider connectionProvider, IMysqlSchemaDataProvider mysqlSchemaDataProvider)
         {
             if (connectionProvider == null) throw new ArgumentNullException("connectionProvider");
             _connectionProvider = connectionProvider;
-            _mysqlScemaDataProvider = mysqlScemaDataProvider;
+            _mysqlSchemaDataProvider = mysqlSchemaDataProvider;
         }
 
         public IConnectionProvider ConnectionProvider
@@ -26,12 +26,12 @@ namespace Simple.Data.Mysql
 
         public IEnumerable<Table> GetTables()
         {
-            return _mysqlScemaDataProvider.GetTables();
+            return _mysqlSchemaDataProvider.GetTables();
         }
 
         public IEnumerable<Column> GetColumns(Table table)
         {
-            return _mysqlScemaDataProvider.GetColumnsFor(table).Select(c => new Column(c.Name, table, c.IsAutoincrement, c.DbType, c.Capacity));
+            return _mysqlSchemaDataProvider.GetColumnsFor(table).Select(c => new Column(c.Name, table, c.IsAutoincrement, c.DbType, c.Capacity));
         }
 
         public IEnumerable<Procedure> GetStoredProcedures()
@@ -47,19 +47,18 @@ namespace Simple.Data.Mysql
         public Key GetPrimaryKey(Table table)
         {
             if (table == null) throw new ArgumentNullException("table");
-            return _mysqlScemaDataProvider.GetPrimaryKeyFor(table);
+            return _mysqlSchemaDataProvider.GetPrimaryKeyFor(table);
         }
 
         public IEnumerable<ForeignKey> GetForeignKeys(Table table)
         {
-            return _mysqlScemaDataProvider.GetForeignKeysFor(table);
+            return _mysqlSchemaDataProvider.GetForeignKeysFor(table);
         }
 
         public string QuoteObjectName(string unquotedName)
         {
-            //no quoting of table / column name in MySql 4.0
             if (unquotedName == null) throw new ArgumentNullException("unquotedName");
-            return unquotedName;
+            return _mysqlSchemaDataProvider.QuoteObjectName(unquotedName);
         }
 
         public string NameParameter(string baseName)

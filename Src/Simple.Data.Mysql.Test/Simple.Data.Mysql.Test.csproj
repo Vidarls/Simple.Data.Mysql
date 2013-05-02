@@ -98,7 +98,9 @@
     <Compile Include="InsertTests.cs" />
     <Compile Include="MysqlConnectorHelperTest.cs" />
     <Compile Include="OrderDetailTests.cs" />
-    <Compile Include="SchemaDataProviderTests\40SChemaDataProviderTests.cs" />
+    <Compile Include="SchemaDataProviderTests\40SchemaDataProviderTests.cs" />
+    <Compile Include="SchemaDataProviderTests\50SchemaDataProviderTests.cs" />
+    <Compile Include="SchemaDataProviderTests\SchemaDataProviderSelectionTest.cs" />
     <Compile Include="SchemaTests\ColumnInfoCreatorTest.cs" />
     <Compile Include="SchemaTests\DatabaseSchemaTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

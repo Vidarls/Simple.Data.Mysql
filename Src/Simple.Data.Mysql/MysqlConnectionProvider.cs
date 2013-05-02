@@ -12,7 +12,9 @@ namespace Simple.Data.Mysql
     public class MysqlConnectionProvider : IConnectionProvider
     {
         private string _connectionString;
-        
+
+        private ISchemaProvider _schemaProvider;
+
         public void SetConnectionString(string connectionString)
         {
             _connectionString = connectionString;
@@ -25,7 +27,33 @@ namespace Simple.Data.Mysql
         
         public ISchemaProvider GetSchemaProvider()
         {
-            return new MysqlSchemaProvider(this, new MysqlScemaDataProvider40(this));
+            if (_schemaProvider == null)
+            {
+                var serverVersion = GetServerVersion();
+                if (!string.IsNullOrEmpty(serverVersion) && serverVersion.StartsWith("5"))
+                {
+                    _schemaProvider = new MysqlSchemaProvider(this, new MysqlSchemaDataProvider50(this));
+                }
+                else
+                {
+                    _schemaProvider = new MysqlSchemaProvider(this, new MysqlSchemaDataProvider40(this));
+                }
+            }
+            return _schemaProvider;
+        }
+
+        private string GetServerVersion()
+        {
+            using (var connection = CreateConnection())
+            {
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandType = CommandType.Text;
+                    command.CommandText = "SELECT VERSION();";
+                    connection.OpenIfClosed();
+                    return command.ExecuteScalar() as string;
+                }
+            }
         }
 
         public string ConnectionString
