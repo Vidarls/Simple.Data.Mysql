@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace Simple.Data.Mysql
@@ -97,14 +98,25 @@ namespace Simple.Data.Mysql
             //typename(capacity) and plain typename
             //capture group 1 captures typename
             //capture group 2 captures capacity if present
-            var regex = new Regex(@"^([^(]+)(?:\((\d+)\))?$");
+            var regex = new Regex(@"^([^(]+)(?:\(([0-9]+||[0-9]+,[0-9]+)\))?$");
             var match = regex.Match(typeColumnValue);
 
             if (match.Groups[1].Success)
                 type = GetDbType(match.Groups[1].Value);
 
             if (match.Groups[2].Success)
-                capacity = int.Parse(match.Groups[2].Value);
+            {
+                var capacitySplits = match.Groups[2].Value.Split(',');
+                if (capacitySplits.Any())
+                {
+                    capacity = int.Parse(capacitySplits.First());
+                }
+                else
+                {
+                    capacity = int.Parse(match.Groups[2].Value);
+                }
+            }
+
 
         }
     }
