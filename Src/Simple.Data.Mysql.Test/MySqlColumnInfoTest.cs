@@ -14,11 +14,14 @@ namespace Simple.Data.Mysql.Test
             Assert.True(columnInfo.Capacity == 10);
         }
 
+        [Test]
         public void DecimalColumnWithoutCapacityParsedToDecimal()
         {
             var columnInfo = MysqlColumnInfo.CreateColumnInfo("Price", "Price", "decimal", "price");
             Assert.True(columnInfo.DbType == DbType.Decimal);
         }
+
+        [Test]
         public void DecimalColumnWithCapacityWithoutPrecisionParsedToDecimal()
         {
             var columnInfo = MysqlColumnInfo.CreateColumnInfo("Price", "Price", "decimal(10)", "price");
