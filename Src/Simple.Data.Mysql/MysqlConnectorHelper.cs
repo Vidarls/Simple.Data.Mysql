@@ -9,7 +9,7 @@ namespace Simple.Data.Mysql
     public static class MysqlConnectorHelper
     {
         private static DbProviderFactory _dbFactory;
-        
+
         private static DbProviderFactory DbFactory
         {
             get
@@ -36,12 +36,20 @@ namespace Simple.Data.Mysql
             return adapter;
         }
 
+
         private static DbProviderFactory GetDbFactory()
         {
-            var mysqlAssembly =
-                Assembly.LoadFile(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase.Substring(8)), "MySql.Data.dll"));
+            var thisAssembly = typeof(MysqlSchemaProvider).Assembly;
+
+            var path = thisAssembly.CodeBase.Replace("file:///", "").Replace("file://", "//");
+            path = Path.GetDirectoryName(path);
+            if (path == null) throw new ArgumentException("Unrecognised assemblyFile.");
+
+            var mysqlAssembly = Assembly.LoadFrom(Path.Combine(path, "MySql.Data.dll"));
+
             var mysqlDbFactoryType = mysqlAssembly.GetType("MySql.Data.MySqlClient.MySqlClientFactory");
-            return (DbProviderFactory) Activator.CreateInstance(mysqlDbFactoryType);
+            return (DbProviderFactory)Activator.CreateInstance(mysqlDbFactoryType);
         }
+
     }
 }
