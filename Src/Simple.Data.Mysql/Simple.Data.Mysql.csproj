@@ -69,6 +69,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SqlTypeResolver.cs" />
     <Compile Include="IEnumeratorExtensions.cs" />
     <Compile Include="MysqlConnectorHelper.cs" />
     <Compile Include="MysqlCustomInserter.cs" />
