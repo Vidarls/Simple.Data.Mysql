@@ -7,8 +7,8 @@ namespace Simple.Data.Mysql
     {
         private static readonly Dictionary<string, Type> ClrTypes = new Dictionary<string, Type>
                                                                         {
-                                                                            {"tinyint", typeof(byte)},
-                                                                            {"tinyint unsigned", typeof(ushort)}, //check
+                                                                            {"tinyint", typeof(sbyte)},
+                                                                            {"tinyint unsigned", typeof(byte)},
                                                                             {"smallint", typeof(Int16)},
                                                                             {"smallint unsigned", typeof(UInt16)},
                                                                             {"mediumint", typeof(Int32)},
@@ -34,7 +34,7 @@ namespace Simple.Data.Mysql
                                                                             {"timestamp", typeof(DateTime)},
                                                                             {"time", typeof (DateTime)},
                                                                             {"year", typeof(Int32)},
-                                                                            {"enum", typeof(Int32)} //check
+                                                                            {"enum", typeof(Int32)}
                                                                         };
 
         public static Type GetClrType(string sqlTypeName)
