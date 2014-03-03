@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Data.SqlClient;
 using System.Linq;
-using System.Text;
+using MySql.Data.MySqlClient;
 using Simple.Data.Ado;
 using Simple.Data.Ado.Schema;
 
@@ -16,8 +17,8 @@ namespace Simple.Data.Mysql.ShemaDataProviders
         private IEnumerable<Table> _cachedTables;
         private IEnumerable<TableColumnInfoPair> _cachedColumns;
         private IEnumerable<TableForeignKeyPair>  _cachedForeignKeys;
-      
         private string _sqlMode;
+        private string _cachedSchema;
 
         public MysqlSchemaDataProvider50(IConnectionProvider connectionProvider)
         {
@@ -31,6 +32,70 @@ namespace Simple.Data.Mysql.ShemaDataProviders
             
             return _cachedTables;
         }
+
+        public IEnumerable<Procedure> GetStoredProcedures()
+        {
+            return GetSchema("Procedures").Select(SchemaRowToStoredProcedure);
+        }
+
+        public string GetDefaultSchema()
+        {
+            if (string.IsNullOrEmpty(_cachedSchema))
+                FillCachedDefaultSchema();
+
+            return _cachedSchema;
+        }
+
+        private void FillCachedDefaultSchema()
+        {
+            using (var cn = _connectionProvider.CreateConnection())
+            {
+                using (var command = cn.CreateCommand())
+                {
+                    cn.OpenIfClosed();
+                    command.CommandText = "SELECT database()";
+                    _cachedSchema = command.ExecuteScalar().ToString();
+                }
+            }
+        }
+
+        private IEnumerable<DataRow> GetSchema(string collectionName, params string[] constraints)
+        {
+            using (var cn = _connectionProvider.CreateConnection())
+            {
+                cn.Open();
+                return cn.GetSchema(collectionName, constraints).AsEnumerable();
+            }
+        }
+
+        private static Procedure SchemaRowToStoredProcedure(DataRow row)
+        {
+            return new Procedure(row["ROUTINE_NAME"].ToString(), row["SPECIFIC_NAME"].ToString(), row["ROUTINE_SCHEMA"].ToString());
+        }
+
+
+        public IEnumerable<Parameter> GetParameters(Procedure storedProcedure)
+        {
+            // GetSchema does not return the return value of e.g. a stored proc correctly,
+            // i.e. there isn't sufficient information to correctly set up a stored proc.
+            using (var connection =  _connectionProvider.CreateConnection())
+            {
+                using (var command = (MySqlCommand)connection.CreateCommand())
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.CommandText = storedProcedure.QualifiedName;
+
+                    connection.Open();
+                    MySqlCommandBuilder.DeriveParameters(command);
+
+                    foreach (MySqlParameter p in command.Parameters)
+                        yield return
+                            new Parameter(p.ParameterName, SqlTypeResolver.GetClrType(p.DbType.ToString()), p.Direction,
+                                p.DbType, p.Size);
+                }
+            }
+        }
+
 
         private void FillSchemaCache()
         {
@@ -198,5 +263,7 @@ namespace Simple.Data.Mysql.ShemaDataProviders
         {
             return unquotedName.StartsWith("`") ? unquotedName : string.Concat("`", unquotedName, "`");
         }
+
+
     }
 }

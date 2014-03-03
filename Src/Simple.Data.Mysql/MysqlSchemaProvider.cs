@@ -36,12 +36,12 @@ namespace Simple.Data.Mysql
 
         public IEnumerable<Procedure> GetStoredProcedures()
         {
-            return Enumerable.Empty<Procedure>();
+            return _mysqlSchemaDataProvider.GetStoredProcedures();
         }
 
        public IEnumerable<Parameter> GetParameters(Procedure storedProcedure)
         {
-            return Enumerable.Empty<Parameter>();
+            return _mysqlSchemaDataProvider.GetParameters(storedProcedure);
         }
 
         public Key GetPrimaryKey(Table table)
@@ -70,7 +70,8 @@ namespace Simple.Data.Mysql
         
         public string GetDefaultSchema()
         {
-            return null;
+            return _mysqlSchemaDataProvider.GetDefaultSchema();
         }
+
     }
 }
