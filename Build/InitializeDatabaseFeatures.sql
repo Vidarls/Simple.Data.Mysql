@@ -1,11 +1,11 @@
 -- MySQL5 Only, Features
 -- Tests Stored Procedures
 
-DROP DATABASE IF EXISTS simpledatatest;
-CREATE DATABASE simpledatatest;
+DROP DATABASE IF EXISTS simpledatatestfeatures;
+CREATE DATABASE simpledatatestfeatures;
 SHOW DATABASES;
 
-USE simpledatatest;
+USE simpledatatestfeatures;
 
 CREATE TABLE customers (
   CustomerId int(11) NOT NULL auto_increment,
@@ -23,7 +23,6 @@ INSERT INTO customers VALUES (5,'Amy','5, Street');
 DROP procedure IF EXISTS `GetAllCustomers`;
 
 DELIMITER $$
-USE `simpledatatest`$$
 CREATE PROCEDURE `GetAllCustomers` ()
 BEGIN
 	SELECT * from customers order by CustomerId;
@@ -34,7 +33,6 @@ DELIMITER ;
 DROP procedure IF EXISTS `GetCustomerById`;
 
 DELIMITER $$
-USE `simpledatatest`$$
 CREATE PROCEDURE `GetCustomerById` (id int)
 BEGIN
 	select * from customers where CustomerId = id;
@@ -46,7 +44,7 @@ DROP procedure IF EXISTS `GetCustomersByName`;
 
 DELIMITER $$
 
-CREATE DEFINER=`root`@`%` PROCEDURE `GetCustomersByName`(_name varchar(255))
+CREATE PROCEDURE `GetCustomersByName`(_name varchar(255))
 BEGIN
 	select * from customers where Name = _name;
 END$$
@@ -56,7 +54,6 @@ DELIMITER ;
 DROP procedure IF EXISTS `GetCountCustomersAsOutputParam`;
 
 DELIMITER $$
-USE `simpledatatest`$$
 CREATE PROCEDURE `GetCountCustomersAsOutputParam` (out answer int)
 BEGIN
 	SELECT count(CustomerId)
