@@ -1,9 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30110.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simple.Data.Mysql", "Simple.Data.Mysql\Simple.Data.Mysql.csproj", "{6BB6D48E-E2AB-4AF7-8FE3-10A3AACE3FC7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simple.Data.Mysql.Test", "Simple.Data.Mysql.Test\Simple.Data.Mysql.Test.csproj", "{B6507B06-C337-4661-B5D0-E23786CDEE87}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simple.Data.Mysql5.Test.Features", "Simple.Data.Mysql5.Test.Features\Simple.Data.Mysql5.Test.Features.csproj", "{616499DF-BA33-4F6A-BEDB-2D7511C45B6A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,6 +33,12 @@ Global
 		{B6507B06-C337-4661-B5D0-E23786CDEE87}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B6507B06-C337-4661-B5D0-E23786CDEE87}.Release|x86.ActiveCfg = Release|x86
 		{B6507B06-C337-4661-B5D0-E23786CDEE87}.Release|x86.Build.0 = Release|x86
+		{616499DF-BA33-4F6A-BEDB-2D7511C45B6A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{616499DF-BA33-4F6A-BEDB-2D7511C45B6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{616499DF-BA33-4F6A-BEDB-2D7511C45B6A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{616499DF-BA33-4F6A-BEDB-2D7511C45B6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{616499DF-BA33-4F6A-BEDB-2D7511C45B6A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{616499DF-BA33-4F6A-BEDB-2D7511C45B6A}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
