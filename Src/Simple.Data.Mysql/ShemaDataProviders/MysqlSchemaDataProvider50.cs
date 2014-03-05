@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Data.SqlClient;
 using System.Linq;
-using MySql.Data.MySqlClient;
 using Simple.Data.Ado;
 using Simple.Data.Ado.Schema;
 
@@ -76,26 +74,56 @@ namespace Simple.Data.Mysql.ShemaDataProviders
 
         public IEnumerable<Parameter> GetParameters(Procedure storedProcedure)
         {
-            // GetSchema does not return the return value of e.g. a stored proc correctly,
-            // i.e. there isn't sufficient information to correctly set up a stored proc.
+            var list = new List<Parameter>();
+
             using (var connection =  _connectionProvider.CreateConnection())
             {
-                using (var command = (MySqlCommand)connection.CreateCommand())
+                connection.Open();
+
+                var command = connection.CreateCommand();
+                command.CommandType = CommandType.Text;
+                command.CommandText =
+                    string.Format("SELECT * FROM information_schema.parameters WHERE SPECIFIC_NAME = '{0}';",
+                        storedProcedure.Name);
+
+                using (var reader = command.ExecuteReader())
                 {
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.CommandText = storedProcedure.QualifiedName;
-
-                    connection.Open();
-                    MySqlCommandBuilder.DeriveParameters(command);
-
-                    foreach (MySqlParameter p in command.Parameters)
-                        yield return
-                            new Parameter(p.ParameterName, SqlTypeResolver.GetClrType(p.DbType.ToString()), p.Direction,
-                                p.DbType, p.Size);
+                    while (reader.Read())
+                    {
+                        list.Add(new Parameter
+                        (
+                            reader["PARAMETER_NAME"].ToString(),
+                            SqlTypeResolver.GetClrType(reader["DATA_TYPE"].ToString()),
+                            GetParameterDirection(reader["PARAMETER_MODE"].ToString()),
+                            MysqlColumnInfo.GetDbType(reader["DATA_TYPE"].ToString()),
+                            Convert.IsDBNull(reader["CHARACTER_MAXIMUM_LENGTH"]) ? -1 : Convert.ToInt32(reader["CHARACTER_MAXIMUM_LENGTH"])
+                        ));
+                    }
                 }
+
+                connection.Close();
+
+                return list;
             }
+
         }
 
+        private ParameterDirection GetParameterDirection(string parameterMode)
+        {
+            switch (parameterMode)
+            {
+                case "IN":
+                    return ParameterDirection.Input;
+                case "OUT":
+                    return ParameterDirection.Output;
+                case "INOUT":
+                    return ParameterDirection.InputOutput;
+                case "RETURN":
+                    return ParameterDirection.ReturnValue;
+                default:
+                    throw new SimpleDataException(String.Format("Unknown parameter mode: {0}", parameterMode));
+            }
+        }
 
         private void FillSchemaCache()
         {

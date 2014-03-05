@@ -59,7 +59,7 @@ namespace Simple.Data.Mysql
             IsPrimaryKey = isPrimaryKey;
         }
 
-        private static DbType GetDbType(string sqlTypeName)
+        public static DbType GetDbType(string sqlTypeName)
         {
             DbType clrType;
             return DbTypes.TryGetValue(sqlTypeName, out clrType) ? clrType : DbType.String;

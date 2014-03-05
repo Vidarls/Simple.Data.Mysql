@@ -5,10 +5,12 @@ namespace Simple.Data.Mysql5.Test.Features
     [TestFixture]
     public class StoredProceduresTests
     {
+        private string connection = "server=localhost;database=simpledatatestfeatures;user=root;";
+
         [Test]
         public void GetCustomersWithNoParameters()
         {
-            var db = Database.Open();
+            var db = Database.OpenConnection(connection);
             var list = db.GetAllCustomers().ToList();
 
             Assert.AreEqual(5, list.Count);
@@ -22,7 +24,7 @@ namespace Simple.Data.Mysql5.Test.Features
         [Test]
         public void GetCustomerById()
         {
-            var db = Database.Open();
+            var db = Database.OpenConnection(connection);
             var customer = db.GetCustomerById(3).First();
 
             Assert.AreEqual(3, customer.CustomerId);
@@ -33,7 +35,7 @@ namespace Simple.Data.Mysql5.Test.Features
         [Test]
         public void GetCustomerByIdWithNamedParameter()
         {
-            var db = Database.Open();
+            var db = Database.OpenConnection(connection);
             var customer = db.GetCustomerById(id: 2).First();
 
             Assert.AreEqual(2, customer.CustomerId);
@@ -44,7 +46,7 @@ namespace Simple.Data.Mysql5.Test.Features
         [Test]
         public void GetCustomerByUnknownId()
         {
-            var db = Database.Open();
+            var db = Database.OpenConnection(connection);
             var customer = db.GetCustomerById(-1).FirstOrDefault();
 
             Assert.IsNull(customer);
@@ -53,7 +55,7 @@ namespace Simple.Data.Mysql5.Test.Features
         [Test]
         public void GetCustomersByName()
         {
-            var db = Database.Open();
+            var db = Database.OpenConnection(connection);
             var list = db.GetCustomersByName("Amy").ToList();
 
             Assert.AreEqual(2, list.Count);
@@ -64,7 +66,7 @@ namespace Simple.Data.Mysql5.Test.Features
         [Test]
         public void GetCustomersByNameAndNamedParameter()
         {
-            var db = Database.Open();
+            var db = Database.OpenConnection(connection);
             var list = db.GetCustomersByName(_name: "Amy").ToList();
 
             Assert.AreEqual(2, list.Count);
@@ -75,7 +77,7 @@ namespace Simple.Data.Mysql5.Test.Features
         [Test]
         public void GetCountCustomersAsOutputParam()
         {
-            var db = Database.Open();
+            var db = Database.OpenConnection(connection);
             //NOTE Mysql does not support defaults on output parameters
             //  so you can't call just db.GetCountCustomersAsOutputParam();
             var result = db.GetCountCustomersAsOutputParam(0);
