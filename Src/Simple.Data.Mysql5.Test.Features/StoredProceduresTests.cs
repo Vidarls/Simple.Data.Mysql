@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System;
+using NUnit.Framework;
 
 namespace Simple.Data.Mysql5.Test.Features
 {
@@ -83,6 +84,24 @@ namespace Simple.Data.Mysql5.Test.Features
             var result = db.GetCountCustomersAsOutputParam(0);
 
             Assert.AreEqual(5, result.OutputValues["answer"]);
+        }
+
+        [Test]
+        public void GetOrdersFrom15thJan()
+        {
+            var db = Database.OpenConnection(connection);
+            var list = db.GetOrdersFromADate(new DateTime(2014, 1, 15, 9, 0, 0)).ToList();
+
+            Assert.AreEqual(2, list.Count);
+        }
+
+        [Test]
+        public void GetOrdersFrom15thJanMidday()
+        {
+            var db = Database.OpenConnection(connection);
+            var list = db.GetOrdersFromADate(new DateTime(2014, 1, 15, 12, 0, 0)).ToList();
+
+            Assert.AreEqual(1, list.Count);
         }
 
     }
