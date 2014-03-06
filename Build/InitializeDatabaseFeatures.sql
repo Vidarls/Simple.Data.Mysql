@@ -116,3 +116,27 @@ BEGIN
 END$$
 
 DELIMITER ;
+
+
+DROP procedure IF EXISTS `GetMultipleRecordSetsForOrders`;
+
+DELIMITER $$
+CREATE PROCEDURE `GetMultipleRecordSetsForOrders`()
+BEGIN
+	SELECT * FROM orders where OrderId = 1;
+	SELECT * FROM orders where OrderId = 3;
+	SELECT * FROM orders where OrderId = 5;
+END$$
+
+DELIMITER ;
+
+DROP procedure IF EXISTS `GetMultipleRecordSetsForCustomerAndOrder`;
+
+DELIMITER $$
+CREATE PROCEDURE `GetMultipleRecordSetsForCustomerAndOrder`()
+BEGIN
+	SELECT * FROM customers where customerId = 1;
+	SELECT * FROM orders where OrderId = 1;
+END$$
+
+DELIMITER ;

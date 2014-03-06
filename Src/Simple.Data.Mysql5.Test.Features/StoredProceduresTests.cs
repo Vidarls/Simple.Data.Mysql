@@ -122,6 +122,42 @@ namespace Simple.Data.Mysql5.Test.Features
             Assert.AreEqual(4, list.Count);
         }
 
+        [Test]
+        public void GetMultipleRecordSets()
+        {
+            var db = Database.OpenConnection(connection);
+        
+            var results = db.GetMultipleRecordSetsForOrders();
+
+            var order = results.FirstOrDefault();
+            Assert.AreEqual(1, order.OrderId);
+
+            Assert.IsTrue(results.NextResult());
+            order = results.FirstOrDefault();
+            Assert.AreEqual(3, order.OrderId);
+
+            Assert.IsTrue(results.NextResult());
+            order = results.FirstOrDefault();
+            Assert.AreEqual(5, order.OrderId);
+
+        }
+
+        [Test]
+        public void GetMultipleRecordSetsForCustomerAndOrder()
+        {
+            var db = Database.OpenConnection(connection);
+
+            var results = db.GetMultipleRecordSetsForCustomerAndOrder();
+
+            var customer = results.FirstOrDefault();
+            Assert.AreEqual(1, customer.CustomerId);
+
+            Assert.IsTrue(results.NextResult());
+            var order = results.FirstOrDefault();
+            Assert.AreEqual(1, order.OrderId);
+
+        }
+
 
     }
 }
