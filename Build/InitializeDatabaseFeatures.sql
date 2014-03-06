@@ -92,3 +92,27 @@ BEGIN
 END$$
 
 DELIMITER ;
+
+DROP procedure IF EXISTS `GetOrdersForAStatus`;
+
+DELIMITER $$
+CREATE PROCEDURE `GetOrdersForAStatus` (_status tinyint)
+BEGIN
+	SELECT *
+    FROM orders
+	WHERE `Status` = _status;
+END$$
+
+DELIMITER ;
+
+DROP procedure IF EXISTS `GetOrdersFromABigNumber`;
+
+DELIMITER $$
+CREATE PROCEDURE `GetOrdersFromABigNumber` (_bignum bigint)
+BEGIN
+	SELECT *
+    FROM orders
+	WHERE BigNum > _bignum;
+END$$
+
+DELIMITER ;

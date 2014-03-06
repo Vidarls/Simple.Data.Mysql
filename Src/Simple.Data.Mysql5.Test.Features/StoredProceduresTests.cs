@@ -104,5 +104,24 @@ namespace Simple.Data.Mysql5.Test.Features
             Assert.AreEqual(1, list.Count);
         }
 
+        [Test]
+        public void GetOrdersForAStatus()
+        {
+            var db = Database.OpenConnection(connection);
+            var list = db.GetOrdersForAStatus(2).ToList();
+
+            Assert.AreEqual(3, list.Count);
+        }
+
+        [Test]
+        public void GetOrdersForABigNum()
+        {
+            var db = Database.OpenConnection(connection);
+            var list = db.GetOrdersFromABigNumber(9223372036854775804).ToList();
+
+            Assert.AreEqual(4, list.Count);
+        }
+
+
     }
 }
