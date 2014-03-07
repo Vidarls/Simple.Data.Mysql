@@ -50,6 +50,12 @@
     <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
     <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'MySql55Tests|AnyCPU'">
+    <OutputPath>bin\MySql55Tests\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'MySql55Tests|x86'">
+    <OutputPath>bin\x86\MySql55Tests\</OutputPath>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Castle.Core">
       <HintPath>..\packages\Castle.Core.3.0.0.4001\lib\net40-client\Castle.Core.dll</HintPath>

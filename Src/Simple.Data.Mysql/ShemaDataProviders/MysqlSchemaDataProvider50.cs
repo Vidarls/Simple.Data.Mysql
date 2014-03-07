@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
-using System.Text;
 using Simple.Data.Ado;
 using Simple.Data.Ado.Schema;
 
@@ -16,8 +15,8 @@ namespace Simple.Data.Mysql.ShemaDataProviders
         private IEnumerable<Table> _cachedTables;
         private IEnumerable<TableColumnInfoPair> _cachedColumns;
         private IEnumerable<TableForeignKeyPair>  _cachedForeignKeys;
-      
         private string _sqlMode;
+        private string _cachedSchema;
 
         public MysqlSchemaDataProvider50(IConnectionProvider connectionProvider)
         {
@@ -30,6 +29,100 @@ namespace Simple.Data.Mysql.ShemaDataProviders
                 FillSchemaCache();
             
             return _cachedTables;
+        }
+
+        public IEnumerable<Procedure> GetStoredProcedures()
+        {
+            return GetSchema("Procedures").Select(SchemaRowToStoredProcedure);
+        }
+
+        public string GetDefaultSchema()
+        {
+            if (string.IsNullOrEmpty(_cachedSchema))
+                FillCachedDefaultSchema();
+
+            return _cachedSchema;
+        }
+
+        private void FillCachedDefaultSchema()
+        {
+            using (var cn = _connectionProvider.CreateConnection())
+            {
+                using (var command = cn.CreateCommand())
+                {
+                    cn.OpenIfClosed();
+                    command.CommandText = "SELECT database()";
+                    _cachedSchema = command.ExecuteScalar().ToString();
+                }
+            }
+        }
+
+        private IEnumerable<DataRow> GetSchema(string collectionName, params string[] constraints)
+        {
+            using (var cn = _connectionProvider.CreateConnection())
+            {
+                cn.Open();
+                return cn.GetSchema(collectionName, constraints).AsEnumerable();
+            }
+        }
+
+        private static Procedure SchemaRowToStoredProcedure(DataRow row)
+        {
+            return new Procedure(row["ROUTINE_NAME"].ToString(), row["SPECIFIC_NAME"].ToString(), row["ROUTINE_SCHEMA"].ToString());
+        }
+
+
+        public IEnumerable<Parameter> GetParameters(Procedure storedProcedure)
+        {
+            var list = new List<Parameter>();
+
+            using (var connection =  _connectionProvider.CreateConnection())
+            {
+                connection.Open();
+
+                var command = connection.CreateCommand();
+                command.CommandType = CommandType.Text;
+                command.CommandText =
+                    string.Format("SELECT * FROM information_schema.parameters WHERE SPECIFIC_NAME = '{0}';",
+                        storedProcedure.Name);
+
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        list.Add(new Parameter
+                        (
+                            reader["PARAMETER_NAME"].ToString(),
+                            SqlTypeResolver.GetClrType(reader["DATA_TYPE"].ToString()),
+                            GetParameterDirection(reader["PARAMETER_MODE"].ToString()),
+                            MysqlColumnInfo.GetDbType(reader["DATA_TYPE"].ToString()),
+                            Convert.IsDBNull(reader["CHARACTER_MAXIMUM_LENGTH"]) ? -1 : Convert.ToInt32(reader["CHARACTER_MAXIMUM_LENGTH"])
+                        ));
+                    }
+                }
+
+                connection.Close();
+
+                return list;
+            }
+
+        }
+
+        private ParameterDirection GetParameterDirection(string parameterMode)
+        {
+            switch (parameterMode)
+            {
+                case "IN":
+                    return ParameterDirection.Input;
+                case "OUT":
+                    return ParameterDirection.Output;
+                case "INOUT":
+                    return ParameterDirection.InputOutput;
+                case "RETURN":
+                    return ParameterDirection.ReturnValue;
+                default:
+                    throw new SimpleDataException(String.Format("Unknown parameter mode: {0}", parameterMode));
+            }
         }
 
         private void FillSchemaCache()
@@ -198,5 +291,7 @@ namespace Simple.Data.Mysql.ShemaDataProviders
         {
             return unquotedName.StartsWith("`") ? unquotedName : string.Concat("`", unquotedName, "`");
         }
+
+
     }
 }

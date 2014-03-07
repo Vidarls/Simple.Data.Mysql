@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Simple.Data.Ado;
 using Simple.Data.Ado.Schema;
 
 namespace Simple.Data.Mysql.ShemaDataProviders
@@ -10,6 +11,9 @@ namespace Simple.Data.Mysql.ShemaDataProviders
         IEnumerable<ForeignKey> GetForeignKeysFor(Table table);
         Key GetPrimaryKeyFor(Table table);
         string QuoteObjectName(string unquotedName);
+        IEnumerable<Procedure> GetStoredProcedures();
+        string GetDefaultSchema();
+        IEnumerable<Parameter> GetParameters(Procedure storedProcedure);
     }
 
     internal class TableColumnInfoPair

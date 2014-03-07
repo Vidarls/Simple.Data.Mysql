@@ -29,8 +29,7 @@ namespace Simple.Data.Mysql
         {
             if (_schemaProvider == null)
             {
-                var serverVersion = GetServerVersion();
-                if (!string.IsNullOrEmpty(serverVersion) && serverVersion.StartsWith("5"))
+                if (IsMySql5)
                 {
                     _schemaProvider = new MysqlSchemaProvider(this, new MysqlSchemaDataProvider50(this));
                 }
@@ -40,6 +39,44 @@ namespace Simple.Data.Mysql
                 }
             }
             return _schemaProvider;
+        }
+
+        public string ConnectionString
+        {
+            get { return _connectionString; }
+        }
+
+        public string GetIdentityFunction()
+        {
+            return "@@IDENTITY";
+        }
+
+        public bool SupportsStoredProcedures
+        {
+            get { return IsMySql5; }
+        }
+
+        public IProcedureExecutor GetProcedureExecutor(AdoAdapter adapter, ObjectName procedureName)
+        {
+            return new ProcedureExecutor(adapter, procedureName);
+        }
+
+        public bool SupportsCompoundStatements
+        {
+            get { return false; }
+        }
+
+        private bool? _cachedIsMySql5;
+        public Boolean IsMySql5
+        {
+            get
+            {
+                if (_cachedIsMySql5.HasValue) return _cachedIsMySql5.Value;
+
+                var version = GetServerVersion();
+                _cachedIsMySql5 = (!string.IsNullOrEmpty(version) && version.StartsWith("5"));
+                return _cachedIsMySql5.Value;
+            }
         }
 
         private string GetServerVersion()
@@ -56,29 +93,6 @@ namespace Simple.Data.Mysql
             }
         }
 
-        public string ConnectionString
-        {
-            get { return _connectionString; }
-        }
 
-        public string GetIdentityFunction()
-        {
-            return "@@IDENTITY";
-        }
-
-        public bool SupportsStoredProcedures
-        {
-            get { return false; }
-        }
-
-        public IProcedureExecutor GetProcedureExecutor(AdoAdapter adapter, ObjectName procedureName)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool SupportsCompoundStatements
-        {
-            get { return false; }
-        }
     }
 }

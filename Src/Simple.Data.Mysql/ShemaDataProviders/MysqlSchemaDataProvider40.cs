@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Data.Common;
 using System.Linq;
 using System.Collections.Generic;
 using System.Data;
@@ -29,6 +28,21 @@ namespace Simple.Data.Mysql.ShemaDataProviders
                 FillSchemaCache();
             
             return _cachedTables;
+        }
+
+        public IEnumerable<Procedure> GetStoredProcedures()
+        {
+            return Enumerable.Empty<Procedure>();
+        }
+
+        public string GetDefaultSchema()
+        {
+            return null;
+        }
+
+        public IEnumerable<Parameter> GetParameters(Procedure storedProcedure)
+        {
+            return Enumerable.Empty<Parameter>();
         }
 
         private void FillSchemaCache()
