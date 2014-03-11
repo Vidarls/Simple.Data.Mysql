@@ -15,8 +15,6 @@ namespace Simple.Data.Mysql.ShemaDataProviders
         private IEnumerable<TableColumnInfoPair> _cachedColumns;
         private IEnumerable<TableForeignKeyPair>  _cachedForeignKeys;
       
-        private string _sqlMode;
-
         public MysqlSchemaDataProvider40(IConnectionProvider connectionProvider)
         {
             _connectionProvider = connectionProvider;
@@ -112,8 +110,7 @@ namespace Simple.Data.Mysql.ShemaDataProviders
 
         private IEnumerable<TableForeignKeyPair> GetExplicitForeignKeys(IDbConnection connection)
         {
-            var foreignKeys = new List<TableForeignKeyPair>();
-            var sqlMode = GetSqlMode(connection);
+            var foreignKeys = new List<TableForeignKeyPair>();            
 
             var command = connection.CreateCommand();
             command.CommandType = CommandType.Text;
@@ -128,9 +125,8 @@ namespace Simple.Data.Mysql.ShemaDataProviders
                     {
                         foreignKeys.AddRange(
                             MysqlForeignKeyCreator.ExtractForeignKeysFromCreateTableSql(GetTables().Select(t => t.ActualName).ElementAt(i), 
-                                                                                        reader[1].ToString(), 
-                                                                                        sqlMode.Contains("ANSI_QUOTES"), !sqlMode.Contains("NO_BACKSLASH_ESCAPES")
-                                                                                        ).Select(fk => new TableForeignKeyPair(GetTables().ElementAt(i),fk))
+                                                                                        reader[1].ToString(), false, false)                                                                                  
+                                                                                        .Select(fk => new TableForeignKeyPair(GetTables().ElementAt(i),fk))
                             );
                     }
                     i++;
@@ -162,11 +158,6 @@ namespace Simple.Data.Mysql.ShemaDataProviders
                 }
             }
             return foreignKeys;
-        }
-
-        private String GetSqlMode(IDbConnection connection)
-        {
-            return "";
         }
 
         public IEnumerable<MysqlColumnInfo> GetColumnsFor(Table table)
