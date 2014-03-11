@@ -47,7 +47,7 @@ namespace Simple.Data.Mysql.Test
         [Test]
         public void With_the_insertidentity_option_the_autoincrement_column_should_be_inserted_to()
         {
-            var db = Db.WithOptions(new AdoOptions(identityInsert: true));
+            var db = Db.WithOptions(new AdoOptions(identityInsert: true, commandTimeout: 30));
             db.empty_table.DeleteAll();
             db.empty_table.Insert(new {id = 88888, Somevalue = "This is really not needed, is it?"});
             var inserted = db.empty_table.All().Single();
@@ -57,7 +57,7 @@ namespace Simple.Data.Mysql.Test
         [Test]
         public void With_the_insertidentity_option_the_autoincrement_column_should_autoincrement_when_no_value_is_provided()
         {
-            var db = Db.WithOptions(new AdoOptions(identityInsert: true));
+            var db = Db.WithOptions(new AdoOptions(identityInsert: true, commandTimeout: 30));
             db.empty_table.DeleteAll();
             db.empty_table.Insert(new {Somevalue = "humty dumpty"});
             var inserted = db.empty_table.All().Single();
@@ -71,7 +71,7 @@ namespace Simple.Data.Mysql.Test
         [Test]
         public void With_the_insertidentity_option_the_inserted_row_will_not_be_returned()
         {
-            var db = Db.WithOptions(new AdoOptions(identityInsert: true));
+            var db = Db.WithOptions(new AdoOptions(identityInsert: true, commandTimeout: 30));
             db.empty_table.DeleteAll();
             var toBeInserted = new {Id = 99997, Somevalue = "running out of ideas here"};
             var inserted = db.empty_table.Insert(toBeInserted);
