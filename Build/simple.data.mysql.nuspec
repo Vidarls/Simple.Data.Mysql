@@ -3,7 +3,7 @@
   <metadata> 
     <id>Simple.Data.Mysql</id> 
     <version>0.8.2</version> 
-    <authors>Vidar Løvbrekke Sømme, Richard Hopton</authors> 
+    <authors>Vidar Løvbrekke Sømme, Richard Hopton, Richard Wilde</authors> 
     <owners>Vidar Løvbrekke Sømme</owners>
     <description>MySql ADO provider for the Simple.Data library</description> 
 	<summary>MySql ADO provider for the Simple.Data library Based on the Mysql .net connector v 5.1.7. Tested against Mysql 4.0 and Mysql 5.5</summary>
