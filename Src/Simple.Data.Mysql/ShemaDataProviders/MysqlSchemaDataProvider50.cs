@@ -8,13 +8,13 @@ using Simple.Data.Ado.Schema;
 
 namespace Simple.Data.Mysql.ShemaDataProviders
 {
-    class MysqlSchemaDataProvider50: IMysqlSchemaDataProvider
+    class MysqlSchemaDataProvider50 : IMysqlSchemaDataProvider
     {
         private readonly IConnectionProvider _connectionProvider;
 
         private IEnumerable<Table> _cachedTables;
         private IEnumerable<TableColumnInfoPair> _cachedColumns;
-        private IEnumerable<TableForeignKeyPair>  _cachedForeignKeys;
+        private IEnumerable<TableForeignKeyPair> _cachedForeignKeys;
         private string _sqlMode;
         private string _cachedSchema;
 
@@ -27,7 +27,7 @@ namespace Simple.Data.Mysql.ShemaDataProviders
         {
             if (_cachedTables == null)
                 FillSchemaCache();
-            
+
             return _cachedTables;
         }
 
@@ -38,22 +38,19 @@ namespace Simple.Data.Mysql.ShemaDataProviders
 
         public string GetDefaultSchema()
         {
-            if (string.IsNullOrEmpty(_cachedSchema))
-                FillCachedDefaultSchema();
+            if (_cachedTables == null)
+                FillSchemaCache();
 
             return _cachedSchema;
         }
 
-        private void FillCachedDefaultSchema()
+        private void FillCachedDefaultSchema(IDbConnection connection)
         {
-            using (var cn = _connectionProvider.CreateConnection())
+            using (var command = connection.CreateCommand())
             {
-                using (var command = cn.CreateCommand())
-                {
-                    cn.OpenIfClosed();
-                    command.CommandText = "SELECT database()";
-                    _cachedSchema = command.ExecuteScalar().ToString();
-                }
+                connection.OpenIfClosed();
+                command.CommandText = "SELECT database()";
+                _cachedSchema = command.ExecuteScalar().ToString();
             }
         }
 
@@ -76,7 +73,7 @@ namespace Simple.Data.Mysql.ShemaDataProviders
         {
             var list = new List<Parameter>();
 
-            using (var connection =  _connectionProvider.CreateConnection())
+            using (var connection = _connectionProvider.CreateConnection())
             {
                 connection.Open();
 
@@ -130,6 +127,7 @@ namespace Simple.Data.Mysql.ShemaDataProviders
             using (var connection = _connectionProvider.CreateConnection())
             {
                 connection.Open();
+                FillCachedDefaultSchema(connection);
                 FillTableCache(connection);
                 FillColumnCache(connection);
                 FillForeignKeyCache(connection);
@@ -158,27 +156,19 @@ namespace Simple.Data.Mysql.ShemaDataProviders
             var columns = new List<TableColumnInfoPair>();
             var command = connection.CreateCommand();
             command.CommandType = CommandType.Text;
-            command.CommandText = GetTables().Select(t => string.Format("SHOW COLUMNS FROM `{0}`;", t.ActualName)).Aggregate((result, next) => result += next);
+            command.CommandText = string.Format("SELECT TABLE_NAME, COLUMN_NAME, EXTRA, COLUMN_TYPE, COLUMN_KEY FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '{0}' ORDER BY TABLE_NAME;", _cachedSchema);
             using (var reader = command.ExecuteReader())
             {
-                var i = 0;
-                do
+                while (reader.Read())
                 {
-                    while (reader.Read())
-                    {
-                        columns.Add(new TableColumnInfoPair(
-                                        _cachedTables.ElementAt(i),
-                                        MysqlColumnInfo.CreateColumnInfo(
-                                            reader[0].ToString(),
-                                            reader[5].ToString(),
-                                            reader[1].ToString(),
-                                            reader[3].ToString())
-                                        )
-                                   );
-                    }
-                    i++;
-                } while ((reader.NextResult()));
+                    columns.Add(new TableColumnInfoPair(
+                                        new Table(reader[0].ToString(), null, TableType.Table),
+                                        MysqlColumnInfo.CreateColumnInfo(reader[1].ToString(), reader[2].ToString(), reader[3].ToString(), reader[4].ToString())
+                                    )
+                               );
+                }
             }
+
             _cachedColumns = columns;
         }
 
@@ -207,10 +197,10 @@ namespace Simple.Data.Mysql.ShemaDataProviders
                     while (reader.Read())
                     {
                         foreignKeys.AddRange(
-                            MysqlForeignKeyCreator.ExtractForeignKeysFromCreateTableSql(GetTables().Select(t => t.ActualName).ElementAt(i), 
-                                                                                        reader[1].ToString(), 
+                            MysqlForeignKeyCreator.ExtractForeignKeysFromCreateTableSql(GetTables().Select(t => t.ActualName).ElementAt(i),
+                                                                                        reader[1].ToString(),
                                                                                         sqlMode.Contains("ANSI_QUOTES"), !sqlMode.Contains("NO_BACKSLASH_ESCAPES")
-                                                                                        ).Select(fk => new TableForeignKeyPair(GetTables().ElementAt(i),fk))
+                                                                                        ).Select(fk => new TableForeignKeyPair(GetTables().ElementAt(i), fk))
                             );
                     }
                     i++;
@@ -237,7 +227,7 @@ namespace Simple.Data.Mysql.ShemaDataProviders
                     foreignKeys.AddRange(
                         primaryKeyColumns.Where(c => c.ColumnInfo.Name == column.Name).Select(
                             c =>
-                            new TableForeignKeyPair(table,new ForeignKey(new ObjectName(null, table.ActualName), new[] { column.Name },
+                            new TableForeignKeyPair(table, new ForeignKey(new ObjectName(null, table.ActualName), new[] { column.Name },
                                            new ObjectName(null, c.Table.ActualName), new[] { c.ColumnInfo.Name }))));
                 }
             }
@@ -271,7 +261,7 @@ namespace Simple.Data.Mysql.ShemaDataProviders
             if (_cachedColumns == null)
                 FillSchemaCache();
 
-            var found = _cachedColumns.Where(c=>c.Table.Equals(table)).Select(c=>c.ColumnInfo);
+            var found = _cachedColumns.Where(c => c.Table.Equals(table)).Select(c => c.ColumnInfo);
             return found;
         }
 
@@ -284,7 +274,7 @@ namespace Simple.Data.Mysql.ShemaDataProviders
 
         public Key GetPrimaryKeyFor(Table table)
         {
-            return new Key(GetColumnsFor(table).Where(c=>c.IsPrimaryKey).Select(c=>c.Name));
+            return new Key(GetColumnsFor(table).Where(c => c.IsPrimaryKey).Select(c => c.Name));
         }
 
         public string QuoteObjectName(string unquotedName)
