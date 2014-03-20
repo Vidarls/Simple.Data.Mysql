@@ -16,6 +16,7 @@ namespace Simple.Data.Mysql
                                                                             {"int", typeof(Int32)},
                                                                             {"int unsigned", typeof(UInt32)},
                                                                             {"bigint", typeof(Int64)},
+                                                                            {"bigint unsigned", typeof(UInt64)},
                                                                             {"float", typeof(Single)},
                                                                             {"double", typeof(Double)},
                                                                             {"decimal", typeof(decimal)},
