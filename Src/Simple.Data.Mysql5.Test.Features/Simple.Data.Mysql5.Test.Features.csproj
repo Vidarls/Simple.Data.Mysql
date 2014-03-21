@@ -34,6 +34,15 @@
     <OutputPath>bin\MySql55Tests\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Castle.Core">
+      <HintPath>..\packages\Castle.Core.3.0.0.4001\lib\net40-client\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="FakeItEasy">
+      <HintPath>..\packages\FakeItEasy.1.7.4507.61\lib\NET40\FakeItEasy.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentAssertions">
+      <HintPath>..\packages\FluentAssertions.1.7.1.1\Lib\net40\FluentAssertions.dll</HintPath>
+    </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\packages\NUnit.2.5.9.10348\lib\nunit.framework.dll</HintPath>
     </Reference>
@@ -63,6 +72,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="50SchemaDataProviderTests.cs" />
+    <Compile Include="SchemaTests.cs" />
     <Compile Include="StoredProceduresTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

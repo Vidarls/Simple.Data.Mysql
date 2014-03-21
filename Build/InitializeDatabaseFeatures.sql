@@ -1,5 +1,8 @@
 -- MySQL5 Only, Features
--- Tests Stored Procedures
+-- Tests 
+--	Stored Procedures
+--	Using INFORMATION_SCHEAMA to FillColumnCache (performance gain)
+
 
 DROP DATABASE IF EXISTS simpledatatestfeatures;
 CREATE DATABASE simpledatatestfeatures;
@@ -140,3 +143,20 @@ BEGIN
 END$$
 
 DELIMITER ;
+
+CREATE TABLE users (
+  Id int(11) NOT NULL auto_increment,
+  Name varchar(255) default NULL,
+  Password varchar(255) default NULL,
+  Age int(11) default NULL,
+  PRIMARY KEY  (Id)
+) ENGINE=InnoDB;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO users VALUES (1,'Bob','Secret',42);
+INSERT INTO users VALUES (2,'Steve','Squirrel',69);
+INSERT INTO users VALUES (3,'Dave','Password',12);
+INSERT INTO users VALUES (22,'Alice','foo',29);
