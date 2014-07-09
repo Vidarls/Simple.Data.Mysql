@@ -51,7 +51,7 @@ namespace Simple.Data.Mysql
 		{
 			get
 			{
-				string codeBase = Assembly.GetExecutingAssembly().CodeBase;
+				string codeBase = Assembly.GetAssembly(typeof(MysqlConnectorHelper)).CodeBase;
 				UriBuilder uri = new UriBuilder(codeBase);
 				string path = Uri.UnescapeDataString(uri.Path);
 				return Path.GetDirectoryName(path);
