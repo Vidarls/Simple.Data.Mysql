@@ -39,15 +39,23 @@ namespace Simple.Data.Mysql
 
         private static DbProviderFactory GetDbFactory()
         {
-			var thisAssembly = typeof(MysqlConnectorHelper).Assembly;
-			var path = Path.GetDirectoryName(thisAssembly.Location);
-			if (string.IsNullOrEmpty(path)) throw new ArgumentException("Unrecognised assemblyFile.");
+			if (string.IsNullOrEmpty(AssemblyDirectory)) throw new ArgumentException("Unrecognised assemblyFile.");
 
-            var mysqlAssembly = Assembly.LoadFrom(Path.Combine(path, "MySql.Data.dll"));
+			var mysqlAssembly = Assembly.LoadFrom(Path.Combine(AssemblyDirectory, "MySql.Data.dll"));
 
             var mysqlDbFactoryType = mysqlAssembly.GetType("MySql.Data.MySqlClient.MySqlClientFactory");
             return (DbProviderFactory)Activator.CreateInstance(mysqlDbFactoryType);
         }
 
+		private static string AssemblyDirectory
+		{
+			get
+			{
+				string codeBase = Assembly.GetExecutingAssembly().CodeBase;
+				UriBuilder uri = new UriBuilder(codeBase);
+				string path = Uri.UnescapeDataString(uri.Path);
+				return Path.GetDirectoryName(path);
+			}
+		}
     }
 }
