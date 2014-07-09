@@ -20,6 +20,12 @@ namespace Simple.Data.Mysql
             }
         }
 
+        private static string GetAssemblyDirectory()
+        {
+            var codeBaseUri = new UriBuilder(Assembly.GetAssembly(typeof(MysqlConnectorHelper)).CodeBase);
+            return Path.GetDirectoryName(Uri.UnescapeDataString(codeBaseUri.Path));
+        }
+
         public static IDbConnection CreateConnection(string connectionString)
         {
             var connection = DbFactory.CreateConnection();
@@ -35,27 +41,15 @@ namespace Simple.Data.Mysql
             adapter.SelectCommand = command;
             return adapter;
         }
-
-
+        
         private static DbProviderFactory GetDbFactory()
         {
-			if (string.IsNullOrEmpty(AssemblyDirectory)) throw new ArgumentException("Unrecognised assemblyFile.");
-
-			var mysqlAssembly = Assembly.LoadFrom(Path.Combine(AssemblyDirectory, "MySql.Data.dll"));
+            var mysqlAssembly = Assembly.LoadFrom(Path.Combine(GetAssemblyDirectory(), "MySql.Data.dll"));
 
             var mysqlDbFactoryType = mysqlAssembly.GetType("MySql.Data.MySqlClient.MySqlClientFactory");
             return (DbProviderFactory)Activator.CreateInstance(mysqlDbFactoryType);
         }
 
-		private static string AssemblyDirectory
-		{
-			get
-			{
-				string codeBase = Assembly.GetAssembly(typeof(MysqlConnectorHelper)).CodeBase;
-				UriBuilder uri = new UriBuilder(codeBase);
-				string path = Uri.UnescapeDataString(uri.Path);
-				return Path.GetDirectoryName(path);
-			}
-		}
+		
     }
 }
