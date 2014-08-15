@@ -39,7 +39,8 @@ namespace Simple.Data.Mysql
 
         public static bool IsRunningOnMono()
         {
-            //This ideally needs confirming that this is the proper way to identify mono
+            // This is the supported way of detecting the mono run-time according to
+            // http://www.mono-project.com/docs/faq/technical/#mono-platforms
             return Type.GetType("Mono.Runtime") != null;
         }
 
