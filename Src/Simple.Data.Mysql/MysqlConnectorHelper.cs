@@ -22,8 +22,25 @@ namespace Simple.Data.Mysql
 
         private static string GetAssemblyDirectory()
         {
-            var codeBaseUri = new UriBuilder(Assembly.GetAssembly(typeof(MysqlConnectorHelper)).CodeBase);
-            return Path.GetDirectoryName(Uri.UnescapeDataString(codeBaseUri.Path));
+            if (IsRunningOnMono())
+            {
+                var codeBaseUri = new UriBuilder(Assembly.GetAssembly(typeof(MysqlConnectorHelper)).CodeBase);
+                return Path.GetDirectoryName(Uri.UnescapeDataString(codeBaseUri.Path));
+            }
+
+            var thisAssembly = typeof(MysqlConnectorHelper).Assembly;
+
+            var path = thisAssembly.CodeBase.Replace("file:///", "").Replace("file://", "//");
+            path = Path.GetDirectoryName(path);
+            if (path == null) throw new ArgumentException("Unrecognised assemblyFile.");
+
+            return path;
+        }
+
+        public static bool IsRunningOnMono()
+        {
+            //This ideally needs confirming that this is the proper way to identify mono
+            return Type.GetType("Mono.Runtime") != null;
         }
 
         public static IDbConnection CreateConnection(string connectionString)
@@ -41,7 +58,7 @@ namespace Simple.Data.Mysql
             adapter.SelectCommand = command;
             return adapter;
         }
-        
+
         private static DbProviderFactory GetDbFactory()
         {
             var mysqlAssembly = Assembly.LoadFrom(Path.Combine(GetAssemblyDirectory(), "MySql.Data.dll"));
@@ -50,6 +67,6 @@ namespace Simple.Data.Mysql
             return (DbProviderFactory)Activator.CreateInstance(mysqlDbFactoryType);
         }
 
-		
+
     }
 }
