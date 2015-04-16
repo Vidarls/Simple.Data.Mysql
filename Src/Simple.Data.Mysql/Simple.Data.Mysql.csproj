@@ -90,9 +90,9 @@
     <Compile Include="MysqlConnectionProvider.cs" />
     <Compile Include="MysqlSchemaProvider.cs" />
     <Compile Include="MysqlColumnInfo.cs" />
-    <Compile Include="ShemaDataProviders\IMysqlSchemaDataProvider.cs" />
-    <Compile Include="ShemaDataProviders\MysqlSchemaDataProvider40.cs" />
-    <Compile Include="ShemaDataProviders\MysqlSchemaDataProvider50.cs" />
+    <Compile Include="SchemaDataProviders\IMysqlSchemaDataProvider.cs" />
+    <Compile Include="SchemaDataProviders\MysqlSchemaDataProvider40.cs" />
+    <Compile Include="SchemaDataProviders\MysqlSchemaDataProvider50.cs" />
     <Compile Include="SqlTokenizer.cs" />
   </ItemGroup>
   <ItemGroup>

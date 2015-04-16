@@ -3,7 +3,7 @@ using System.ComponentModel.Composition;
 using System.Data;
 using Simple.Data.Ado;
 using Simple.Data.Ado.Schema;
-using Simple.Data.Mysql.ShemaDataProviders;
+using Simple.Data.Mysql.SchemaDataProviders;
 
 namespace Simple.Data.Mysql
 {
