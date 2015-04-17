@@ -1,6 +1,6 @@
 ﻿using Simple.Data.Ado;
 using Simple.Data.Ado.Schema;
-using Simple.Data.Mysql.ShemaDataProviders;
+using Simple.Data.Mysql.SchemaDataProviders;
 using System;
 using System.Collections.Generic;
 using System.Linq;

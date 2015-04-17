@@ -7,7 +7,7 @@ using NUnit.Framework;
 using Simple.Data.Ado;
 using Simple.Data.Ado.Schema;
 using Simple.Data.Mysql;
-using Simple.Data.Mysql.ShemaDataProviders;
+using Simple.Data.Mysql.SchemaDataProviders;
 using Enumerable = System.Linq.Enumerable;
 
 namespace Simple.Data.Mysql.Test.SchemaDataProviderTests
