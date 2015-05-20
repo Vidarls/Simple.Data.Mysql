@@ -13,6 +13,7 @@ namespace Simple.Data.Mysql
         //http://dev.mysql.com/doc/refman/5.1/en/c-api-prepared-statement-type-codes.html
         private static readonly Dictionary<string, DbType> DbTypes = new Dictionary<string, DbType>
                                                                         {
+                                                                            {"bit",DbType.Boolean},
                                                                             {"tinyint", DbType.SByte},
                                                                             {"tinyint unsigned", DbType.Byte},
                                                                             {"smallint", DbType.Int16},
