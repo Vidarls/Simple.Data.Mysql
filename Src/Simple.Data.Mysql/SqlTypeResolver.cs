@@ -7,6 +7,7 @@ namespace Simple.Data.Mysql
     {
         private static readonly Dictionary<string, Type> ClrTypes = new Dictionary<string, Type>
                                                                         {
+                                                                            {"bit",typeof(bool)},
                                                                             {"tinyint", typeof(sbyte)},
                                                                             {"tinyint unsigned", typeof(byte)},
                                                                             {"smallint", typeof(Int16)},
