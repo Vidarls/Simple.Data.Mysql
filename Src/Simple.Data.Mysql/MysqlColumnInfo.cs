@@ -42,7 +42,8 @@ namespace Simple.Data.Mysql
                                                                             {"time", DbType.Time},
                                                                             {"year", DbType.Int16},
                                                                             {"enum", DbType.String},
-                                                                            {"set", DbType.String}
+                                                                            {"set", DbType.String},
+                                                                            {"binary", DbType.Binary} 
                                                                         };
 
         public string Name { get; private set; }
